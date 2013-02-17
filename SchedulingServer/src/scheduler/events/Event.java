@@ -10,9 +10,12 @@ public class Event
 	private int duration;
 	private short priority;
 	
+	private String name;
+	private String location;
+	
 	public Event(int duration)
 	{
-		
+		this(0, duration, DEFAULT_PRIORITY);
 	}
 	
 	public Event(long startTime, int duration)
@@ -32,10 +35,35 @@ public class Event
 		this.priority = priority;
 	}
 	
+	public long getStartTime()
+	{
+		return startTime;
+	}
+	
+	public int getDuration()
+	{
+		return duration;
+	}
+	
+	public short getPriority()
+	{
+		return priority;
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
+	
+	public String getLocation()
+	{
+		return location;
+	}
+	
 	/**
 	 * 
-	 * @param buffer
-	 * @return
+	 * @param buffer The buffer that contains the event
+	 * @return The parsed Event
 	 */
 	public static Event ReadFromBuffer(byte[] buffer)
 	{
@@ -46,6 +74,48 @@ public class Event
 		short priorityTmp = byteBuffer.getShort();
 		
 		Event retn = new Event(startTimeTmp, durationTmp, priorityTmp);
+		
+		//Read the Name
+		short strLen = byteBuffer.getShort();
+		while(strLen-- > 0)
+		{
+			retn.name += byteBuffer.getChar();
+		}
+		
+		//Read the Location
+		strLen = byteBuffer.getShort();
+		while(strLen-- > 0)
+		{
+			retn.location += byteBuffer.getChar();
+		}
+		
+		return retn;
+	}
+	
+	/**
+	 * Turns an event into a byte array
+	 * @param event Event to parse
+	 * @return byte array representing the given event
+	 */
+	public static byte[] WriteToBuffer(Event event)
+	{
+		byte[] retn = new byte[2048];
+		ByteBuffer byteBuffer = ByteBuffer.wrap(retn);
+		
+		byteBuffer.putLong(event.startTime);
+		byteBuffer.putInt(event.duration);
+		byteBuffer.putShort(event.priority);
+		
+		//Write Name
+		byteBuffer.putShort((short)event.name.length());
+		for(int i = 0; i < event.name.length(); i++)
+			byteBuffer.putChar(event.name.charAt(i));//TODO: Think of a better way to do this if performance issues arise
+		
+		//Write Location
+		byteBuffer.putShort((short)event.location.length());
+		for(int i = 0; i < event.location.length(); i++)
+			byteBuffer.putChar(event.location.charAt(i));
+		
 		return retn;
 	}
 }

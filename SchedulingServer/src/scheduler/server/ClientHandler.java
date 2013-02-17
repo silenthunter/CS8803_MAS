@@ -18,7 +18,8 @@ public class ClientHandler extends Thread
 	{
 		InputStream istream = null;
 		
-		try {
+		try
+		{
 			istream = clientConn.getInputStream();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -32,12 +33,13 @@ public class ClientHandler extends Thread
 			return;
 		}
 		
-		byte[] buff = new byte[1024];
+		byte[] buff = new byte[2048];
 		
 		//Read while the client is connected
 		while(clientConn.isConnected())
 		{
-			try {
+			try
+			{
 				int msgSize = istream.read();
 				istream.read(buff, 0, msgSize);
 				
