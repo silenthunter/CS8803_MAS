@@ -9,6 +9,7 @@ public class Event
 	private long startTime;
 	private int duration;
 	private short priority;
+	private boolean locked = false;
 	
 	private String name;
 	private String location;
@@ -40,6 +41,11 @@ public class Event
 		return startTime;
 	}
 	
+	public void setStartTime(long startTime)
+	{
+		this.startTime = startTime;
+	}
+	
 	public int getDuration()
 	{
 		return duration;
@@ -68,6 +74,30 @@ public class Event
 	public void setLocation(String location)
 	{
 		this.location = location;
+	}
+	
+	public boolean isLocked()
+	{
+		return locked;
+	}
+	
+	public void lock()
+	{
+		locked = true;
+	}
+	
+	public void unlock()
+	{
+		locked = false;
+	}
+	
+	/**
+	 * Shifts the start time of the event
+	 * @param shiftAmount Amount of time in minutes to shift the event
+	 */
+	public void shiftStartTime(int shiftAmount)
+	{
+		startTime += shiftAmount * 60;
 	}
 	
 	/**
