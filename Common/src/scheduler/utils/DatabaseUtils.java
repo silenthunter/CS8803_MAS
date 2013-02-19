@@ -1,6 +1,7 @@
 package scheduler.utils;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import scheduler.events.Event;
 
@@ -128,6 +129,52 @@ public class DatabaseUtils
 		}
 		
 		return UID;
+	}
+	
+	public static ArrayList<Event> getEventsForUser(int userUID)
+	{
+		Statement stmt = null;
+		ArrayList<Event> retn = new ArrayList<Event>();
+		
+		try
+		{
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT ev.Name, ev.Location, ev.StartTime, ev.Duration, intr.Priority FROM Inter intr, Events ev, Users usr WHERE " +
+					"intr.EventUID = ev.UID AND " +
+					"intr.UserUID = usr.UID AND " +
+					"usr.UID = " +userUID);
+			
+			//Read event information
+			while(rs.next())
+			{
+				//SQL returns start at 1...
+				String name = rs.getString(1);
+				String location = rs.getString(2);
+				long startTime = rs.getLong(3);
+				int duration = rs.getInt(4);
+				short priority = rs.getShort(5);
+				
+				Event ev = new Event(startTime, duration, priority);
+				ev.setName(name);
+				ev.setLocation(location);
+				
+				retn.add(ev);
+			}
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			//Cleanup
+			try 
+			{
+				if(stmt != null) stmt.close();
+			} catch (SQLException e) {}
+		}
+		
+		return retn;
 	}
 	
 }

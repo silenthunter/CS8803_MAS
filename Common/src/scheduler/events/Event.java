@@ -55,9 +55,19 @@ public class Event
 		return name;
 	}
 	
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	
 	public String getLocation()
 	{
 		return location;
+	}
+	
+	public void setLocation(String location)
+	{
+		this.location = location;
 	}
 	
 	/**
@@ -115,6 +125,15 @@ public class Event
 		byteBuffer.putShort((short)event.location.length());
 		for(int i = 0; i < event.location.length(); i++)
 			byteBuffer.putChar(event.location.charAt(i));
+		
+		return retn;
+	}
+	
+	public Event copy()
+	{
+		Event retn = new Event(startTime, duration, priority);
+		retn.name = name;
+		retn.location = location;
 		
 		return retn;
 	}

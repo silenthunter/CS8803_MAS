@@ -1,5 +1,10 @@
 package scheduler.server;
 
+import java.util.ArrayList;
+
+import scheduler.events.Event;
+import scheduler.utils.DatabaseUtils;
+
 public class SchedulingServer {
 
 	/**
@@ -7,7 +12,9 @@ public class SchedulingServer {
 	 */
 	public static void main(String[] args)
 	{
-		// TODO Auto-generated method stub
+		DatabaseUtils.init();
+		
+		ArrayList<Event> ev = DatabaseUtils.getEventsForUser(1);
 
 	}
 
