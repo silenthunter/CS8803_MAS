@@ -1,23 +1,11 @@
 package scheduler.server;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.services.sqs.AmazonSQSClient;
-import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlResult;
-import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
-import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
-import com.amazonaws.services.sqs.model.SendMessageResult;
-
-import scheduler.events.Event;
-import scheduler.geneticAlgorithm.GeneticAlgorithm;
-import scheduler.utils.DatabaseUtils;
 
 public class SchedulingServer
 {

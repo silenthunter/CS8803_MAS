@@ -87,4 +87,14 @@ public class GeneticAlgorithm
 			population.add(ind);
 		}
 	}
+	
+	/**
+	 * Returns the population of this genetic algorithm.
+	 * @return ArrayList of Individuals forming a population
+	 * @remark The population will be sorted from best fitness to worst if <b>compute</b> has been called beforehand.
+	 */
+	public ArrayList<Individual> getPopulation()
+	{
+		return population;
+	}
 }

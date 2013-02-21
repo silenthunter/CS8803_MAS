@@ -170,4 +170,9 @@ public class Individual
 		System.out.println("Score: " + fitness);
 	}
 	
+	public ArrayList<Event> getEvents()
+	{
+		return events;
+	}
+	
 }
