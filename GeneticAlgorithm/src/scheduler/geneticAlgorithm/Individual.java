@@ -33,11 +33,26 @@ public class Individual
 			System.err.println("Parents have arrays of different lengths!");
 		}
 		
-		//Select event from random parent
-		for(int i = 0; i < parent1.events.size(); i++)
+		int num = rand.nextInt(100);
+		
+		if(num > 30)
 		{
-			Event myEv = rand.nextInt(2) == 0 ? parent1.events.get(i).copy() : parent2.events.get(i).copy();
-			this.events.add(myEv);
+			//Select event from random parent
+			for(int i = 0; i < parent1.events.size(); i++)
+			{
+				Event myEv = rand.nextInt(2) == 0 ? parent1.events.get(i).copy() : parent2.events.get(i).copy();
+				this.events.add(myEv);
+			}
+		}
+		else
+		{
+			//Random split point
+			int idx = rand.nextInt(parent1.events.size());
+			for(int i = 0; i < parent1.events.size(); i++)
+			{
+				Event myEv = i < idx ? parent1.events.get(i).copy() : parent2.events.get(i).copy();
+				this.events.add(myEv);
+			}
 		}
 	}
 	
@@ -45,7 +60,7 @@ public class Individual
 	{
 		int choice = rand.nextInt(100);
 		
-		if(choice > 70)
+		if(choice > 60)
 		{
 			//Move a random number and events between 30 minutes and 2 hours
 			int mutCount = rand.nextInt(events.size());
@@ -53,15 +68,15 @@ public class Individual
 			{
 				Event ev = events.get(rand.nextInt(events.size()));
 				long startTime = ev.getStartTime();
-				ev.setStartTime(startTime + 1800 * (rand.nextInt(4) + 1) * (rand.nextInt(2) % 2 == 0 ? 1 : -1));
+				ev.setStartTime(startTime + 1800 * (rand.nextInt(24) + 1) * (rand.nextInt(2) % 2 == 0 ? 1 : -1));
 				
 			}
 		}
-		else
+		else if(choice > 30)
 		{
 			//Move all other events towards or away from an event
 			int idx = rand.nextInt(events.size());
-			int shiftMult = rand.nextInt(8) + 1;
+			int shiftMult = rand.nextInt(24) + 1;
 			
 			//Changes whether the schedule expands or contracts
 			int direction = rand.nextInt(2);
@@ -76,6 +91,38 @@ public class Individual
 				else if(ev.getStartTime() > pivot.getStartTime())
 					ev.shiftStartTime(-30 * shiftMult * direction);
 			}
+		}
+		else if(choice > 10)
+		{
+			//Shift away from an event in one direction
+			int idx = rand.nextInt(events.size());
+			int shiftMult = rand.nextInt(8) + 1;
+			
+			Event pivot = events.get(idx);
+			
+			//Chooses direction of expansion
+			int direction = rand.nextInt(2);
+			
+			for(Event ev :events)
+			{
+				if(ev.getStartTime() < pivot.getStartTime() && direction == 0)
+					ev.shiftStartTime(30 * shiftMult);
+				else if(ev.getStartTime() > pivot.getStartTime() && direction == 1)
+					ev.shiftStartTime(-30 * shiftMult);
+			}
+		}
+		else
+		{
+			//Swap two event times
+			int idx1 = rand.nextInt(events.size());
+			int idx2 = rand.nextInt(events.size());
+			
+			Event ev1 = events.get(idx1);
+			Event ev2 = events.get(idx2);
+			
+			long time1 = ev1.getStartTime();
+			ev1.setStartTime(ev2.getStartTime());
+			ev2.setStartTime(time1);
 		}
 	}
 	
@@ -119,6 +166,8 @@ public class Individual
 			Date dt = new Date(ev.getStartTime() * 1000);
 			System.out.println(dt.toString());
 		}
+		
+		System.out.println("Score: " + fitness);
 	}
 	
 }

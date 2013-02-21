@@ -22,16 +22,24 @@ public class GeneticAlgorithm
 		}
 	}
 	
-	public void compute(int populationSize, int generations)
+	public void compute(int populationSize, int minGenerations, int maxGenerations, int goalFitness)
 	{
 		initPopulation(populationSize);
 		
 		//Main loop
-		for(int i = 0; i < generations; i++)
+		int i;
+		for(i = 0; i < maxGenerations; i++)
 		{
 			//Compute fitness for all individuals
+			boolean bestFit = false;
 			for(Individual ind : population)
+			{
 				ind.computeFitness();
+				
+				//Quit good fitness if found
+				if(i >= minGenerations && ind.fitness >= goalFitness) bestFit = true;
+			}
+			if(bestFit) break;
 			
 			//Sort based on fitness
 			Collections.sort(population, new IndividualComparer());
@@ -52,7 +60,8 @@ public class GeneticAlgorithm
 				Individual ind = new Individual(parent1, parent2);
 				
 				//Mutation
-				if(rand.nextInt(100) < 5)
+				//TODO: Tweak in production to avoid local minimum
+				if(rand.nextInt(100) < 7)
 					ind.mutate();
 				
 				population.add(ind);
@@ -66,6 +75,7 @@ public class GeneticAlgorithm
 		
 		Collections.sort(population, new IndividualComparer());
 		population.get(0).printSchedule();
+		System.out.println("Generations: " + i);
 		//population.get(0).computeFitness();
 	}
 	
