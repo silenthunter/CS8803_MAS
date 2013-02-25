@@ -105,7 +105,7 @@ public class Event
 	 * @param buffer The buffer that contains the event
 	 * @return The parsed Event
 	 */
-	public static Event ReadFromBuffer(byte[] buffer)
+	public static Event readFromBuffer(byte[] buffer)
 	{
 		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 		
@@ -137,7 +137,7 @@ public class Event
 	 * @param event Event to parse
 	 * @return byte array representing the given event
 	 */
-	public static byte[] WriteToBuffer(Event event)
+	public static byte[] writeToBuffer(Event event)
 	{
 		byte[] retn = new byte[2048];
 		ByteBuffer byteBuffer = ByteBuffer.wrap(retn);

@@ -1,5 +1,6 @@
 package scheduler.algorithmServer;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +18,11 @@ import scheduler.utils.DatabaseUtils;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlRequest;
@@ -27,14 +33,17 @@ import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 
 public class AlgorithmServer extends Thread
 {
+	private static final String BUCKET_NAME = "completedSchedules";
 	
 	private String sqsURL;
 	private AmazonSQSClient sqsClient;
+	private AmazonS3 s3;
 	
 	private ExecutorService threadPool;
 	private int threads;
 	private boolean running = true;
-	private HashMap<Future<ArrayList<Individual>>, String> futures = new HashMap<Future<ArrayList<Individual>>, String>();
+	private HashMap<Future<ArrayList<Individual>>, Message> futures = new HashMap<Future<ArrayList<Individual>>, Message>();
+	private final HashMap<Integer, ArrayList<Individual>> writeQueue = new HashMap<Integer, ArrayList<Individual>>();
 	
 	private void initSQS()
 	{
@@ -43,6 +52,12 @@ public class AlgorithmServer extends Thread
 		GetQueueUrlRequest urlRequest = new GetQueueUrlRequest("schedulerQueue");
 		GetQueueUrlResult res =  sqsClient.getQueueUrl(urlRequest);
 		sqsURL = res.getQueueUrl();
+	}
+	
+	private void initS3()
+	{
+		AWSCredentials credentials = new ClasspathPropertiesFileCredentialsProvider("awsAccess.properties").getCredentials();
+		s3 = new AmazonS3Client(credentials);
 	}
 	
 	@Override
@@ -65,7 +80,7 @@ public class AlgorithmServer extends Thread
 					//Create and submit the task
 					Callable<ArrayList<Individual>> thr = new GeneticAlgorithmThread(uid);
 					Future<ArrayList<Individual>> future = threadPool.submit(thr);
-					futures.put(future, msg.getReceiptHandle());
+					futures.put(future, msg);
 				}
 				
 			}
@@ -85,11 +100,12 @@ public class AlgorithmServer extends Thread
 					try
 					{
 						population = callback.get();
+						int uid = Integer.parseInt(futures.get(callback).getBody());
 						
-						ConvertPopulationToSchedule(population);
+						ConvertPopulationToSchedule(uid, population);
 						
 						//Remove from SQS
-						DeleteMessageRequest delReq = new DeleteMessageRequest(sqsURL, futures.get(callback));
+						DeleteMessageRequest delReq = new DeleteMessageRequest(sqsURL, futures.get(callback).getReceiptHandle());
 						sqsClient.deleteMessage(delReq);
 						
 					} catch (InterruptedException | ExecutionException e) {
@@ -112,19 +128,83 @@ public class AlgorithmServer extends Thread
 	 * Takes the population and saves the events into a compressed file
 	 * @param population The population provided by the genetic algorithm
 	 */
-	private void ConvertPopulationToSchedule(ArrayList<Individual> population)
+	private void ConvertPopulationToSchedule(int UID, ArrayList<Individual> population)
 	{
+		synchronized(writeQueue)
+		{
+			writeQueue.put(UID, population);
+			writeQueue.notify();
+		}
+	}
+	
+	private void writeToS3(String key, byte[] data)
+	{
+		PutObjectResult result;
+		
 		try
 		{
-			ByteArrayOutputStream binFile = new ByteArrayOutputStream();
-			GZIPOutputStream os = new GZIPOutputStream(binFile);
+			ObjectMetadata metaData = new ObjectMetadata();
 			
-			//Write each event from the best set of events
-			for(Event ev : population.get(0).getEvents())
+			metaData.setContentLength(data.length);
+			ByteArrayInputStream inFile = new ByteArrayInputStream(data);
+			
+			PutObjectRequest req = new PutObjectRequest(BUCKET_NAME, key, inFile, metaData);
+			result = s3.putObject(req);
+			
+			result.toString();
+		}catch(Exception e){e.printStackTrace();}//LAZY
+	}
+	
+	private void startS3Thread()
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
 			{
-				os.write(Event.WriteToBuffer(ev));
+				synchronized(writeQueue)
+				{
+					//Wait for schedules to write
+					while(writeQueue.size() == 0)
+					{
+						try
+						{
+							writeQueue.wait();
+						}catch(InterruptedException e)
+						{
+							System.err.println("S3 thread 'wait' interrupted");
+						}
+					}
+					
+					//Get the population
+					int uid = writeQueue.keySet().iterator().next();
+					ArrayList<Individual> population = writeQueue.remove(uid); 
+					
+					try
+					{
+						//Compress list of events
+						ByteArrayOutputStream binFile = new ByteArrayOutputStream();
+						GZIPOutputStream os = new GZIPOutputStream(binFile);
+						
+						os.write(population.size());
+						
+						//Write each event from the best set of events
+						for(int i = 0; i < population.size(); i++)
+						{
+							for(Event ev : population.get(i).getEvents())
+							{
+								os.write(Event.writeToBuffer(ev));
+							}
+						}
+						
+						writeToS3(Integer.toString(uid), binFile.toByteArray());
+						//TODO: Notify GCM that the new file is ready
+						
+					} catch(IOException e){e.printStackTrace();}
+				}
+				
 			}
-		} catch(IOException e){}
+		}).start();
 	}
 	
 	public AlgorithmServer(int threads)
@@ -132,6 +212,8 @@ public class AlgorithmServer extends Thread
 		this.threads = threads;
 		
 		initSQS();
+		initS3();
+		startS3Thread();
 		threadPool = Executors.newFixedThreadPool(threads);
 	}
 	
