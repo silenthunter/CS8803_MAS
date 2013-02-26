@@ -14,6 +14,8 @@ public class Event
 	private String name;
 	private String location;
 	
+	private static final int MAX_SIZE = 2048;
+	
 	public Event(int duration)
 	{
 		this(0, duration, DEFAULT_PRIORITY);
@@ -139,7 +141,7 @@ public class Event
 	 */
 	public static byte[] writeToBuffer(Event event)
 	{
-		byte[] retn = new byte[2048];
+		byte[] retn = new byte[MAX_SIZE];
 		ByteBuffer byteBuffer = ByteBuffer.wrap(retn);
 		
 		byteBuffer.putLong(event.startTime);
@@ -166,5 +168,10 @@ public class Event
 		retn.location = location;
 		
 		return retn;
+	}
+	
+	public int getSize()
+	{
+		return MAX_SIZE;
 	}
 }

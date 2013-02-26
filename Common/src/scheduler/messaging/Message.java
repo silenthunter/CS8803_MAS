@@ -10,6 +10,16 @@ public class Message
 	private int dataLength;
 	private byte[] data;
 	
+	public Message() {}
+	
+	public Message(MessageType type, int userID, byte[] data)
+	{
+		this.type = type;
+		this.userID = userID;
+		this.data = data.clone();
+		this.dataLength = data.length;
+	}
+	
 	public static Message readFromBuffer(byte[] arr)
 	{
 		ByteBuffer byteBuffer = ByteBuffer.wrap(arr);
