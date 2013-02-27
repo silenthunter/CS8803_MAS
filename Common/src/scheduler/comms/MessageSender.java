@@ -65,6 +65,11 @@ public class MessageSender
 		writeMessage(msg);
 	}
 	
+	/**
+	 * Finds the latest schedule the server has produced for a user, if one exists
+	 * @param userID The unique identifier of the user
+	 * @return The possible schedules for a user if any are found, Null otherwise
+	 */
 	public ArrayList<ArrayList<Event>> getSchedules(int userID)
 	{
 		ArrayList<ArrayList<Event>> retn = new ArrayList<ArrayList<Event>>();
@@ -76,9 +81,14 @@ public class MessageSender
 	
 	public void writeMessage(Message msg)
 	{
+		byte[] lengthArr = new byte[4];
 		byte[] arr = Message.writeToBuffer(msg);
 		
+		ByteBuffer byteBuffer = ByteBuffer.wrap(lengthArr);
+		byteBuffer.putInt(arr.length);
+		
 		try {
+			outStream.write(lengthArr);
 			outStream.write(arr);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

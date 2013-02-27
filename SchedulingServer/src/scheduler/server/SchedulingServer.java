@@ -1,5 +1,11 @@
 package scheduler.server;
 
+import java.util.ArrayList;
+import java.util.Date;
+
+import scheduler.comms.MessageSender;
+import scheduler.events.Event;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.services.sqs.AmazonSQSClient;
@@ -38,9 +44,15 @@ public class SchedulingServer
 	 */
 	public static void main(String[] args)
 	{
+		ListenServer srv = new ListenServer(8000);
+		srv.start();
+		
+		MessageSender sender = new MessageSender("localhost", 8000);
+		sender.connect();
+		
 		//DatabaseUtils.init();
 		
-		/*ArrayList<Event> events = new ArrayList<Event>();//DatabaseUtils.getEventsForUser(1);
+		ArrayList<Event> events = new ArrayList<Event>();//DatabaseUtils.getEventsForUser(1);
 		Date d = new Date();
 		
 		for(int i = 0; i < 50; i++)
@@ -49,13 +61,8 @@ public class SchedulingServer
 			events.add(ev);
 		}
 		
-		GeneticAlgorithm alg = new GeneticAlgorithm(events);
-		alg.compute(100, 0, 50000, 0);*/
+		sender.addEvents(events, 1);
 		
-		//ListenServer srv = new ListenServer(3000);
-		
-		SchedulingServer.initSQS();
-		SchedulingServer.writeToSQS("Test Message");
 	}
 
 }

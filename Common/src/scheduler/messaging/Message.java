@@ -22,12 +22,28 @@ public class Message
 	
 	public static Message readFromBuffer(byte[] arr)
 	{
-		ByteBuffer byteBuffer = ByteBuffer.wrap(arr);
+		return readFromBuffer(arr, 0, arr.length);
+	}
+	
+	public byte[] getData()
+	{
+		return data;
+	}
+	
+	public MessageType getType()
+	{
+		return type;
+	}
+	
+	public static Message readFromBuffer(byte[] arr, int startIndex, int length)
+	{
+		ByteBuffer byteBuffer = ByteBuffer.wrap(arr, startIndex, length);
 		
 		Message retn = new Message();
 		retn.type = MessageType.values()[byteBuffer.getInt()];
 		retn.userID = byteBuffer.getInt();
 		retn.dataLength = byteBuffer.getInt();
+		retn.data = new byte[retn.dataLength];
 		byteBuffer.get(retn.data, 0, retn.dataLength);
 		
 		return retn;

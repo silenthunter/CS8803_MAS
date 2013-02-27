@@ -11,10 +11,10 @@ public class Event
 	private short priority;
 	private boolean locked = false;
 	
-	private String name;
-	private String location;
+	private String name = "";
+	private String location = "";
 	
-	private static final int MAX_SIZE = 2048;
+	public static final int MAX_SIZE = 2048;
 	
 	public Event(int duration)
 	{
@@ -109,7 +109,19 @@ public class Event
 	 */
 	public static Event readFromBuffer(byte[] buffer)
 	{
-		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+		return readFromBuffer(buffer, 0, buffer.length);
+	}
+	
+	/**
+	 * 
+	 * @param buffer The buffer that contains the event
+	 * @param start The index of the first byte of the event
+	 * @param length The length of the event in the buffer
+	 * @return The parsed Event
+	 */
+	public static Event readFromBuffer(byte[] buffer, int start, int length)
+	{
+		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer, start, length);
 		
 		long startTimeTmp = byteBuffer.getLong();
 		int durationTmp = byteBuffer.getInt();
