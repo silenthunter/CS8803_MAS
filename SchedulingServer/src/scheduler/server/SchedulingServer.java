@@ -1,13 +1,21 @@
 package scheduler.server;
 
+import java.io.ByteArrayInputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 
 import scheduler.comms.MessageSender;
 import scheduler.events.Event;
+import scheduler.utils.DatabaseUtils;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.GetQueueUrlRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlResult;
@@ -44,24 +52,11 @@ public class SchedulingServer
 	 */
 	public static void main(String[] args)
 	{
+		SchedulingServer.initSQS();
+		DatabaseUtils.init();
+		
 		ListenServer srv = new ListenServer(8000);
 		srv.start();
-		
-		MessageSender sender = new MessageSender("localhost", 8000);
-		sender.connect();
-		
-		//DatabaseUtils.init();
-		
-		ArrayList<Event> events = new ArrayList<Event>();//DatabaseUtils.getEventsForUser(1);
-		Date d = new Date();
-		
-		for(int i = 0; i < 50; i++)
-		{
-			Event ev = new Event(d.getTime() / 1000, 60);
-			events.add(ev);
-		}
-		
-		sender.addEvents(events, 1);
 		
 	}
 

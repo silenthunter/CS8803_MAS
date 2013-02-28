@@ -3,6 +3,7 @@ package scheduler.algorithmServer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -10,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import scheduler.events.Event;
@@ -186,19 +188,31 @@ public class AlgorithmServer extends Thread
 						ByteArrayOutputStream binFile = new ByteArrayOutputStream();
 						GZIPOutputStream os = new GZIPOutputStream(binFile);
 						
-						os.write(population.size());
+						//Holds an int for ArrayList lengths
+						byte[] lengthArr = new byte[4];
 						
-						//Write each event from the best set of events
+						ByteBuffer byteBuffer = ByteBuffer.wrap(lengthArr);
+						byteBuffer.putInt(population.size());
+						os.write(lengthArr);
+						
+						//Write each event from each population
 						for(int i = 0; i < population.size(); i++)
 						{
+							//write the size
+							byteBuffer.rewind();
+							byteBuffer.putInt(population.get(i).getEvents().size());
+							
+							os.write(lengthArr);
 							for(Event ev : population.get(i).getEvents())
 							{
 								os.write(Event.writeToBuffer(ev));
 							}
 						}
 						
+						os.close();
+						
+						//TODO: Notify GCM that the new file is ready						
 						writeToS3(Integer.toString(uid), binFile.toByteArray());
-						//TODO: Notify GCM that the new file is ready
 						
 					} catch(IOException e){e.printStackTrace();}
 				}

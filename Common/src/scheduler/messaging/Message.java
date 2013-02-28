@@ -1,6 +1,9 @@
 package scheduler.messaging;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+
+import scheduler.events.Event;
 
 public class Message
 {
@@ -33,6 +36,11 @@ public class Message
 	public MessageType getType()
 	{
 		return type;
+	}
+	
+	public int getUserID()
+	{
+		return userID;
 	}
 	
 	public static Message readFromBuffer(byte[] arr, int startIndex, int length)

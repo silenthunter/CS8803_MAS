@@ -117,7 +117,7 @@ public class DatabaseUtils
 		}
 		catch(SQLException e)
 		{
-			
+			e.printStackTrace();
 		}
 		finally
 		{
