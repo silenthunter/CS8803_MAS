@@ -86,6 +86,15 @@ public class AlgorithmServer extends Thread
 				}
 				
 			}
+			else
+			{
+				//Make sure the listener thread doesn't spin
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 			
 			//Check the futures for returns
 			ArrayList<Future<ArrayList<Individual>>> removed = new ArrayList<Future<ArrayList<Individual>>>();
