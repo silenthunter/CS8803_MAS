@@ -1,9 +1,6 @@
 package scheduler.messaging;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-
-import scheduler.events.Event;
 
 public class Message
 {

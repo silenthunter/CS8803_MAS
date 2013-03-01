@@ -31,6 +31,8 @@ public class ListenServer extends Thread
 			while(isRunning)
 			{
 				Socket clientConn = serverSocket.accept();
+				
+				System.out.println("Client Connected");
 				ClientHandler handler = new ClientHandler(clientConn);
 				handler.start();
 				

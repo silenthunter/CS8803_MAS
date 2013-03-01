@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import scheduler.events.Event;
@@ -77,6 +76,8 @@ public class AlgorithmServer extends Thread
 				//Process each message for user UIDs
 				for(Message msg : res.getMessages())
 				{
+					System.out.println("Message Received");
+					
 					int uid = Integer.parseInt(msg.getBody());
 					
 					//Create and submit the task
@@ -244,8 +245,13 @@ public class AlgorithmServer extends Thread
 	{
 		int threads = Integer.parseInt(args[0]);
 		
+		System.out.println("Setting up database");
 		DatabaseUtils.init();
+		
+		System.out.println("Creating Server");
 		AlgorithmServer srv = new AlgorithmServer(threads);
+		
+		System.out.println("Starting Server");
 		srv.start();
 		
 		//Wait as long as the server is alive

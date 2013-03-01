@@ -1,14 +1,12 @@
 package scheduler.server;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
-
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
@@ -53,8 +51,6 @@ public class ClientHandler extends Thread
 		
 		byte[] buff;
 		
-		int messagesRead = 0;
-		
 		//Read while the client is connected
 		while(clientConn.isConnected())
 		{
@@ -76,15 +72,18 @@ public class ClientHandler extends Thread
 					offset += bytesRead;
 				}
 				
-				messagesRead++;
-				
 				processMessage(buff);
 				
 				
-			} catch (IOException e) {
+			} 
+			catch (SocketException e)
+			{
+				System.out.println("Socket Exception: Leaving Loop");
+				break;
+			}catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} 
 		}
 	}
 	

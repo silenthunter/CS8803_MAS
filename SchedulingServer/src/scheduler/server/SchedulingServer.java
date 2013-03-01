@@ -1,21 +1,9 @@
 package scheduler.server;
 
-import java.io.ByteArrayInputStream;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Date;
-
-import scheduler.comms.MessageSender;
-import scheduler.events.Event;
 import scheduler.utils.DatabaseUtils;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.GetQueueUrlRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlResult;
@@ -52,10 +40,15 @@ public class SchedulingServer
 	 */
 	public static void main(String[] args)
 	{
+		System.out.println("Initializing SQS");
 		SchedulingServer.initSQS();
+		
+		System.out.println("Initializing Database Connection");
 		DatabaseUtils.init();
 		
+		System.out.println("Creating Server");
 		ListenServer srv = new ListenServer(8000);
+		System.out.println("Starting Server");
 		srv.start();
 		
 	}
