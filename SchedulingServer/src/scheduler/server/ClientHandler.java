@@ -11,6 +11,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -118,6 +119,11 @@ public class ClientHandler extends Thread
 	private ArrayList<Event> getEventsFromMessage(Message msg)
 	{
 		ArrayList<Event> events = new ArrayList<Event>();
+		
+		//Don't continue on null events
+		if(msg.getData() == null)
+			return events;
+		
 		ByteBuffer byteBuffer = ByteBuffer.wrap(msg.getData());
 		
 		int offset = 4;
@@ -135,21 +141,28 @@ public class ClientHandler extends Thread
 		return events;
 	}
 	
+	/**
+	 * Takes a user's ID and attempts to retrieve a schedule from Amazon S3
+	 * @param userID The user's ID
+	 * @return An array of bytes for a schedule, NULL if an error occurs
+	 */
 	private byte[] getFileFromS3(int userID)
 	{
-		AWSCredentials credentials = new ClasspathPropertiesFileCredentialsProvider("awsAccess.properties").getCredentials();
-		AmazonS3 s3 = new AmazonS3Client(credentials);
-		
-		GetObjectRequest req = new GetObjectRequest("completedSchedules", Integer.toString(userID));
-		S3Object obj = s3.getObject(req);
-		int size = (int)obj.getObjectMetadata().getContentLength();
-		
-		byte[] retn = new byte[size];
-		
-		//Read from the object
-		S3ObjectInputStream stream = obj.getObjectContent();
+		byte[] retn = null;
 		
 		try {
+			AWSCredentials credentials = new ClasspathPropertiesFileCredentialsProvider("awsAccess.properties").getCredentials();
+			AmazonS3 s3 = new AmazonS3Client(credentials);
+			
+			GetObjectRequest req = new GetObjectRequest("completedSchedules", Integer.toString(userID));
+			S3Object obj = s3.getObject(req);
+			int size = (int)obj.getObjectMetadata().getContentLength();
+			
+			retn = new byte[size];
+			
+			//Read from the object
+			S3ObjectInputStream stream = obj.getObjectContent();
+		
 			int totalRead = 0;
 			int read = 0;
 			do
@@ -161,6 +174,9 @@ public class ClientHandler extends Thread
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (AmazonS3Exception e)
+		{
+			System.err.println(e.getErrorCode() + " (Key: " + userID + ")");
 		}
 		
 		return retn;

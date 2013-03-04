@@ -16,8 +16,15 @@ public class Message
 	{
 		this.type = type;
 		this.userID = userID;
-		this.data = data.clone();
-		this.dataLength = data.length;
+		
+		//Don't try to copy a null array
+		if(data != null)
+		{
+			this.data = data.clone();
+			this.dataLength = data.length;
+		}
+		else
+			this.dataLength = 0;
 	}
 	
 	public static Message readFromBuffer(byte[] arr)
@@ -48,8 +55,13 @@ public class Message
 		retn.type = MessageType.values()[byteBuffer.getInt()];
 		retn.userID = byteBuffer.getInt();
 		retn.dataLength = byteBuffer.getInt();
-		retn.data = new byte[retn.dataLength];
-		byteBuffer.get(retn.data, 0, retn.dataLength);
+		if(retn.dataLength > 0)
+		{
+			retn.data = new byte[retn.dataLength];
+			byteBuffer.get(retn.data, 0, retn.dataLength);
+		}
+		else
+			retn.data = null;
 		
 		return retn;
 	}
@@ -71,7 +83,8 @@ public class Message
 		byteBuffer.putInt(msg.userID);
 		byteBuffer.putInt(msg.dataLength);
 		
-		byteBuffer.put(msg.data);
+		if(msg.data != null)
+			byteBuffer.put(msg.data);
 		
 		return retn;
 	}

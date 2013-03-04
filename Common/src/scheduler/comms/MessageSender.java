@@ -119,45 +119,49 @@ public class MessageSender
 	{
 		ArrayList<ArrayList<Event>> schedule = new ArrayList<ArrayList<Event>>();
 		
+		//No need to continue of there is no data
+		if(msg.getData() == null)
+			return schedule;
+		
 		try
 		{
-		ByteArrayInputStream bin = new ByteArrayInputStream(msg.getData());
-		GZIPInputStream inputStream = new GZIPInputStream(bin);
-		
-		//TODO: Dynamic array
-		byte[] buffer = new byte[100000000];
-		
-		int readSoFar = 0;
-		int read = 0;
-		
-		do
-		{
-			read = inputStream.read(buffer, readSoFar, 10000);
-			readSoFar += read;
-		} while(read > 0);
-		
-		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
-		
-		int offset = 4;
-		int numSchedule = byteBuffer.getInt(0);
-		for(int i = 0; i < numSchedule; i++)
-		{
-			int numEvents = byteBuffer.getInt(offset);
-			offset += 4;
-			ArrayList<Event> events = new ArrayList<Event>();
+			ByteArrayInputStream bin = new ByteArrayInputStream(msg.getData());
+			GZIPInputStream inputStream = new GZIPInputStream(bin);
 			
-			for(int j = 0; j < numEvents; j++)
+			//TODO: Dynamic array
+			byte[] buffer = new byte[100000000];
+			
+			int readSoFar = 0;
+			int read = 0;
+			
+			do
 			{
-				//TODO: Make variable size
-				
-				Event newEvent = Event.readFromBuffer(buffer, offset, Event.MAX_SIZE);
-				events.add(newEvent);
-				
-				offset += Event.MAX_SIZE;
-			}
+				read = inputStream.read(buffer, readSoFar, 10000);
+				readSoFar += read;
+			} while(read > 0);
 			
-			schedule.add(events);
-		}
+			ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+			
+			int offset = 4;
+			int numSchedule = byteBuffer.getInt(0);
+			for(int i = 0; i < numSchedule; i++)
+			{
+				int numEvents = byteBuffer.getInt(offset);
+				offset += 4;
+				ArrayList<Event> events = new ArrayList<Event>();
+				
+				for(int j = 0; j < numEvents; j++)
+				{
+					//TODO: Make variable size
+					
+					Event newEvent = Event.readFromBuffer(buffer, offset, Event.MAX_SIZE);
+					events.add(newEvent);
+					
+					offset += Event.MAX_SIZE;
+				}
+				
+				schedule.add(events);
+			}
 		}
 		catch(IOException e)
 		{

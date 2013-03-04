@@ -37,6 +37,8 @@ public class DatabaseUtils
 	 */
 	public static int addEvent(Event event)
 	{
+		upkeepConnection();
+		
 		Statement stmt = null;
 		int UID = -1;
 		
@@ -73,6 +75,8 @@ public class DatabaseUtils
 	 */
 	public static int addUser(String name)
 	{
+		upkeepConnection();
+		
 		Statement stmt = null;
 		int UID = -1;
 		
@@ -106,6 +110,8 @@ public class DatabaseUtils
 	 */
 	public static int addUserToEvent(int userUID, int eventUID, int priority)
 	{
+		upkeepConnection();
+		
 		Statement stmt = null;
 		int UID = -1;
 		
@@ -133,6 +139,8 @@ public class DatabaseUtils
 	
 	public static ArrayList<Event> getEventsForUser(int userUID)
 	{
+		upkeepConnection();
+		
 		Statement stmt = null;
 		ArrayList<Event> retn = new ArrayList<Event>();
 		
@@ -175,6 +183,22 @@ public class DatabaseUtils
 		}
 		
 		return retn;
+	}
+	
+	private static void upkeepConnection()
+	{
+		try
+		{
+			if(!conn.isValid(1))
+			{
+				//Close the old connection and open a new one
+				conn.close();
+				init();
+			}
+		} catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 }

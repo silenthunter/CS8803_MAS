@@ -174,57 +174,60 @@ public class AlgorithmServer extends Thread
 			@Override
 			public void run()
 			{
-				synchronized(writeQueue)
+				while(running)
 				{
-					//Wait for schedules to write
-					while(writeQueue.size() == 0)
+					synchronized(writeQueue)
 					{
-						try
+						//Wait for schedules to write
+						while(writeQueue.size() == 0)
 						{
-							writeQueue.wait();
-						}catch(InterruptedException e)
-						{
-							System.err.println("S3 thread 'wait' interrupted");
-						}
-					}
-					
-					//Get the population
-					int uid = writeQueue.keySet().iterator().next();
-					ArrayList<Individual> population = writeQueue.remove(uid); 
-					
-					try
-					{
-						//Compress list of events
-						ByteArrayOutputStream binFile = new ByteArrayOutputStream();
-						GZIPOutputStream os = new GZIPOutputStream(binFile);
-						
-						//Holds an int for ArrayList lengths
-						byte[] lengthArr = new byte[4];
-						
-						ByteBuffer byteBuffer = ByteBuffer.wrap(lengthArr);
-						byteBuffer.putInt(population.size());
-						os.write(lengthArr);
-						
-						//Write each event from each population
-						for(int i = 0; i < population.size(); i++)
-						{
-							//write the size
-							byteBuffer.rewind();
-							byteBuffer.putInt(population.get(i).getEvents().size());
-							
-							os.write(lengthArr);
-							for(Event ev : population.get(i).getEvents())
+							try
 							{
-								os.write(Event.writeToBuffer(ev));
+								writeQueue.wait();
+							}catch(InterruptedException e)
+							{
+								System.err.println("S3 thread 'wait' interrupted");
 							}
 						}
 						
-						os.close();
+						//Get the population
+						int uid = writeQueue.keySet().iterator().next();
+						ArrayList<Individual> population = writeQueue.remove(uid); 
 						
-						//TODO: Notify GCM that the new file is ready						
-						writeToS3(Integer.toString(uid), binFile.toByteArray());
-						
-					} catch(IOException e){e.printStackTrace();}
+						try
+						{
+							//Compress list of events
+							ByteArrayOutputStream binFile = new ByteArrayOutputStream();
+							GZIPOutputStream os = new GZIPOutputStream(binFile);
+							
+							//Holds an int for ArrayList lengths
+							byte[] lengthArr = new byte[4];
+							
+							ByteBuffer byteBuffer = ByteBuffer.wrap(lengthArr);
+							byteBuffer.putInt(population.size());
+							os.write(lengthArr);
+							
+							//Write each event from each population
+							for(int i = 0; i < population.size(); i++)
+							{
+								//write the size
+								byteBuffer.rewind();
+								byteBuffer.putInt(population.get(i).getEvents().size());
+								
+								os.write(lengthArr);
+								for(Event ev : population.get(i).getEvents())
+								{
+									os.write(Event.writeToBuffer(ev));
+								}
+							}
+							
+							os.close();
+							
+							//TODO: Notify GCM that the new file is ready						
+							writeToS3(Integer.toString(uid), binFile.toByteArray());
+							
+						} catch(IOException e){e.printStackTrace();}
+					}
 				}
 				
 			}
