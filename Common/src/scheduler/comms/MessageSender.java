@@ -23,12 +23,20 @@ public class MessageSender
 	private InputStream inStream;
 	private OutputStream outStream;
 	
+	/**
+	 * Instantiates a MessageSender object
+	 * @param address The address of the remote server
+	 * @param port The remote server's port
+	 */
 	public MessageSender(String address, int port)
 	{
 		this.address = address;
 		this.port = port;
 	}
 	
+	/**
+	 * Connect to the server using the address and port used in the constructor
+	 */
 	public void connect()
 	{
 		try {
@@ -41,6 +49,9 @@ public class MessageSender
 		}
 	}
 	
+	/**
+	 * Disconnects from the remote server
+	 */
 	public void disconnect()
 	{
 		try {
@@ -52,6 +63,11 @@ public class MessageSender
 		}
 	}
 	
+	/**
+	 * Add events to the server
+	 * @param events The events to add
+	 * @param userID The ID of the local user
+	 */
 	public void addEvents(List<Event> events, int userID)
 	{
 		int numEvents = events.size();
@@ -178,12 +194,21 @@ public class MessageSender
 		writeMessage(msg);
 	}
 	
+	/**
+	 * Request that the server computes a schedule from the user's events
+	 * @param userID The ID of the local user
+	 */
 	public void createSchedule(int userID)
 	{
 		Message msg = new Message(MessageType.CREATE_SCHEDULE, userID, new byte[]{});
 		writeMessage(msg);
 	}
 	
+	/**
+	 * Delete events
+	 * @param userID The ID of the local user
+	 * @param eventIds The UID of the events to remove
+	 */
 	public void deleteEvents(int userID, List<Integer> eventIds)
 	{
 		byte[] data = new byte[4 * eventIds.size()];
@@ -196,6 +221,10 @@ public class MessageSender
 		writeMessage(msg);
 	}
 	
+	/**
+	 * Writes a message to the server
+	 * @param msg The message to write
+	 */
 	public void writeMessage(Message msg)
 	{
 		byte[] lengthArr = new byte[4];
