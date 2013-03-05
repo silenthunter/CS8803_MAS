@@ -184,6 +184,18 @@ public class MessageSender
 		writeMessage(msg);
 	}
 	
+	public void deleteEvents(int userID, List<Integer> eventIds)
+	{
+		byte[] data = new byte[4 * eventIds.size()];
+		ByteBuffer byteBuffer = ByteBuffer.wrap(data);
+		
+		for(int id : eventIds)
+			byteBuffer.putInt(id);
+		
+		Message msg = new Message(MessageType.REMOVE_EVENT, userID, data);
+		writeMessage(msg);
+	}
+	
 	public void writeMessage(Message msg)
 	{
 		byte[] lengthArr = new byte[4];

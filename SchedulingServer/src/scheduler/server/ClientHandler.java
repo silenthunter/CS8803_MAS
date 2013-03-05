@@ -73,7 +73,9 @@ public class ClientHandler extends Thread
 					offset += bytesRead;
 				}
 				
-				processMessage(buff);
+				//Don't process blank messages
+				if(msgSize > 0)
+					processMessage(buff);
 				
 				
 			} 
@@ -113,6 +115,20 @@ public class ClientHandler extends Thread
 			byte[] fileData = getFileFromS3(msg.getUserID());			
 			Message retnMsg = createMessageFromData(fileData);
 			sendMessage(retnMsg);
+		}
+		else if(msg.getType() == MessageType.REMOVE_EVENT)
+		{
+			ArrayList<Integer> uids = new ArrayList<Integer>();
+			ByteBuffer buffer = ByteBuffer.wrap(msg.getData());
+			
+			//Read the array from the msg data array
+			for(int i = 0; i < msg.getDataLength(); i+=4)
+			{
+				int newInt = buffer.getInt();
+				uids.add(newInt);
+			}
+			
+			DatabaseUtils.deleteEvents(uids);
 		}
 	}
 	

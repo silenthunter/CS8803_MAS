@@ -47,6 +47,11 @@ public class Message
 		return userID;
 	}
 	
+	public int getDataLength()
+	{
+		return dataLength;
+	}
+	
 	public static Message readFromBuffer(byte[] arr, int startIndex, int length)
 	{
 		ByteBuffer byteBuffer = ByteBuffer.wrap(arr, startIndex, length);

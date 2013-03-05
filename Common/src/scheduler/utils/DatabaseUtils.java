@@ -2,6 +2,7 @@ package scheduler.utils;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import scheduler.events.Event;
 
@@ -66,6 +67,37 @@ public class DatabaseUtils
 		}
 		
 		return UID;
+	}
+	
+	/**
+	 * Deletes events with a certain UID
+	 * @param eventIDs A list containing the UIDs of the events
+	 */
+	public static void deleteEvents(List<Integer> eventIDs)
+	{
+		upkeepConnection();
+		
+		Statement stmt = null;
+		String cmd = "DELETE FROM Events WHERE uid=" + eventIDs.get(0);
+		String cmdInter = "DELETE FROM Inter WHERE eventUid=" + eventIDs.get(0);
+		
+		//Add each id to the query
+		for(int i = 0; i < eventIDs.size(); i++)
+		{
+			cmd += " OR uid=" + eventIDs.get(i);
+			cmdInter += " OR uid=" + eventIDs.get(i);
+		}
+		
+		try
+		{
+			stmt = conn.createStatement();
+			stmt.execute(cmd);
+			stmt.execute(cmdInter);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	/**
