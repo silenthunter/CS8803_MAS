@@ -147,7 +147,7 @@ public class DatabaseUtils
 		try
 		{
 			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT ev.Name, ev.Location, ev.StartTime, ev.Duration, intr.Priority FROM Inter intr, Events ev, Users usr WHERE " +
+			ResultSet rs = stmt.executeQuery("SELECT ev.UID, ev.Name, ev.Location, ev.StartTime, ev.Duration, intr.Priority FROM Inter intr, Events ev, Users usr WHERE " +
 					"intr.EventUID = ev.UID AND " +
 					"intr.UserUID = usr.UID AND " +
 					"usr.UID = " +userUID);
@@ -156,15 +156,17 @@ public class DatabaseUtils
 			while(rs.next())
 			{
 				//SQL returns start at 1...
-				String name = rs.getString(1);
-				String location = rs.getString(2);
-				long startTime = rs.getLong(3);
-				int duration = rs.getInt(4);
-				short priority = rs.getShort(5);
+				int UID = rs.getInt(1);
+				String name = rs.getString(2);
+				String location = rs.getString(3);
+				long startTime = rs.getLong(4);
+				int duration = rs.getInt(5);
+				short priority = rs.getShort(6);
 				
 				Event ev = new Event(startTime, duration, priority);
 				ev.setName(name);
 				ev.setLocation(location);
+				ev.setUID(UID);
 				
 				retn.add(ev);
 			}

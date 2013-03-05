@@ -6,6 +6,7 @@ public class Event
 {
 	final static short DEFAULT_PRIORITY = 3;
 	
+	private int UID;
 	private long startTime;
 	private int duration;
 	private short priority;
@@ -78,6 +79,16 @@ public class Event
 		this.location = location;
 	}
 	
+	public int getUID()
+	{
+		return UID;
+	}
+	
+	public void setUID(int UID)
+	{
+		this.UID = UID;
+	}
+	
 	public boolean isLocked()
 	{
 		return locked;
@@ -123,11 +134,13 @@ public class Event
 	{
 		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer, start, length);
 		
+		int uid = byteBuffer.getInt();
 		long startTimeTmp = byteBuffer.getLong();
 		int durationTmp = byteBuffer.getInt();
 		short priorityTmp = byteBuffer.getShort();
 		
 		Event retn = new Event(startTimeTmp, durationTmp, priorityTmp);
+		retn.UID = uid;
 		
 		//Read the Name
 		short strLen = byteBuffer.getShort();
@@ -156,6 +169,7 @@ public class Event
 		byte[] retn = new byte[MAX_SIZE];
 		ByteBuffer byteBuffer = ByteBuffer.wrap(retn);
 		
+		byteBuffer.putInt(event.UID);
 		byteBuffer.putLong(event.startTime);
 		byteBuffer.putInt(event.duration);
 		byteBuffer.putShort(event.priority);
