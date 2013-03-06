@@ -9,7 +9,7 @@ import com.google.api.services.calendar.model.CalendarListEntry;
 
 public class AsyncLoadCalendarList extends AsyncCalendarTask {
 	
-	AsyncLoadCalendarList(MainActivity activity)
+	AsyncLoadCalendarList(GoogleCalendar activity)
 	{
 		super(activity);
 	}
@@ -18,16 +18,16 @@ public class AsyncLoadCalendarList extends AsyncCalendarTask {
 	protected void doInBackground() throws IOException {
 		CalendarList calList = client.calendarList().list().setFields("items(id,summary)").execute();
     	List<CalendarListEntry> list = calList.getItems();
-    	ArrayList<String> names = new ArrayList<String>();
+    	//ArrayList<String> names = new ArrayList<String>();
     	for(CalendarListEntry entry : list)
     	{
-    		names.add(entry.getSummary());
+    		//names.add(entry.getSummary());
     		activity.calIdSummary.put(entry.getSummary(),entry.getId());
     	}
     	activity.selectACalendar();
 
 	}
-	static void run(MainActivity activity)
+	static void run(GoogleCalendar activity)
 	{
 		new AsyncLoadCalendarList(activity).execute();
 	}

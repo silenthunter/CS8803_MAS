@@ -14,7 +14,7 @@ public class AsyncNewEventTask extends AsyncCalendarTask {
 	 EventDateTime startTime; 
 	 EventDateTime endTime;
 	
-	AsyncNewEventTask(MainActivity activity, String summary, String description, EventDateTime startTime, EventDateTime endTime)
+	AsyncNewEventTask(GoogleCalendar activity, String summary, String description, EventDateTime startTime, EventDateTime endTime)
 	{
 		super(activity);
 		this.summary = summary;

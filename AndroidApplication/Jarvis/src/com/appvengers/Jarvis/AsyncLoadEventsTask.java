@@ -14,7 +14,7 @@ public class AsyncLoadEventsTask extends AsyncCalendarTask {
 	ArrayList<Event> events;
 	
 
-	AsyncLoadEventsTask(MainActivity activity,ArrayList<Event> events, DateTime timeMin, DateTime timeMax) {
+	AsyncLoadEventsTask(GoogleCalendar activity,ArrayList<Event> events, DateTime timeMin, DateTime timeMax) {
 		super(activity);
 		this.timeMax = timeMax;
 		this.timeMin = timeMin;
@@ -25,11 +25,12 @@ public class AsyncLoadEventsTask extends AsyncCalendarTask {
 	protected void doInBackground() throws IOException {
 		String pageToken = null;
 		do{
-			Events eventsObj = client.events().list(activity.calendarId).setPageToken(pageToken).setSingleEvents(true).setTimeMin(timeMin).setTimeMax(timeMax).execute();
+			Events eventsObj = client.events().list(activity.calendarId).setPageToken(pageToken).setSingleEvents(true).setTimeMin(timeMin).setTimeMax(timeMax).setFields("items").execute();
 			List<Event> items = eventsObj.getItems();
 			events.addAll(items);
 			
 		}while (pageToken !=null);
+		activity.showEvents();
 
 	}
 

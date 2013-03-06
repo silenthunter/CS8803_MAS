@@ -2,12 +2,11 @@ package com.appvengers.Jarvis;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
 
 public class ShowSuccess extends Activity {
 
@@ -33,9 +32,10 @@ public class ShowSuccess extends Activity {
         return super.onOptionsItemSelected(item);
     }
     
-    public void onAddAnotherEvent()
+    public void onAddAnotherEvent(View view)
     {
     	setResult(Activity.RESULT_OK,null);
+    	finish();
     }
 
 }

@@ -65,6 +65,12 @@
 	        android:layout_height="0dp"
 	        android:text="@string/button_ok" 
 	        android:onClick="addCalendarEvent"/>
+	    <Button
+	        android:layout_weight="1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="0dp"
+	        android:text="@string/button_view_months_events" 
+	        android:onClick="getTodaysEvents"/>
 	
 	</LinearLayout>
 </ScrollView>
