@@ -101,6 +101,38 @@ public class DatabaseUtils
 	}
 	
 	/**
+	 * Modifies existing events
+	 * @param events The events to overwrite
+	 */
+	public static void modifyEvents(List<Event> events)
+	{
+		upkeepConnection();
+		
+		try
+		{
+			Statement stmt = null;
+			stmt = conn.createStatement();
+			
+			//Update each event
+			for(Event event : events)
+			{
+				String cmd = "UPDATE Events SET " +
+						"Name=" + event.getName() +
+						" StartTime=" + event.getStartTime() +
+						" Duration=" + event.getDuration() +
+						" Location=" + event.getLocation() +
+						" WHERE uid=" + event.getUID();
+				
+				stmt.execute(cmd);
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Add a new user to the database
 	 * @param name Name of the user to add
 	 * @return The unique identifier for the added user. Returns -1 if there is an error.
