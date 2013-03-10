@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -78,6 +79,21 @@ public class GoogleCalendar extends Activity {
 	    client = new com.google.api.services.calendar.Calendar.Builder(
 	        transport, jsonFactory, credential).setApplicationName("Jarvis/1.0")
 	        .build();
+	    
+	    String SENDER_ID = "616490724891";
+	    GCMRegistrar.checkDevice(this);
+	    GCMRegistrar.checkManifest(this);
+	    
+	    final String regId = GCMRegistrar.getRegistrationId(this);
+	    if(regId.equals(""))
+	    {
+	    	GCMRegistrar.register(this, SENDER_ID);
+	    }
+	    else
+	    {
+	    	System.out.println("Registered with ID: " + regId);
+	    }
+	    
 	  }
 	  protected void onActivityResult(final int requestCode, final int resultCode,
 		         final Intent data) {

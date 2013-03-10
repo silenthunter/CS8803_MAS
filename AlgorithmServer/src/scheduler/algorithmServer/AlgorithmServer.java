@@ -17,6 +17,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import scheduler.events.Event;
+import scheduler.gcm.GoogleMessaging;
 import scheduler.gcm.RegistrationServlet;
 import scheduler.geneticAlgorithm.Individual;
 import scheduler.utils.DatabaseUtils;
@@ -251,7 +252,7 @@ public class AlgorithmServer extends Thread
 	public static void main(String[] args)
 	{
 		
-		Server server = new Server(8080);
+		/*Server server = new Server(8080);
 		try {
 			ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 			contextHandler.addServlet(RegistrationServlet.class, "/");
@@ -263,7 +264,9 @@ public class AlgorithmServer extends Thread
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+		
+		GoogleMessaging.init();
 		
 		/*int threads = Integer.parseInt(args[0]);
 		
