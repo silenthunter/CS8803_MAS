@@ -130,6 +130,11 @@ public class ClientHandler extends Thread
 			
 			DatabaseUtils.deleteEvents(uids);
 		}
+		else if(msg.getType() == MessageType.MODIFY_EVENT)
+		{
+			ArrayList<Event> events = getEventsFromMessage(msg);
+			DatabaseUtils.modifyEvents(events);
+		}
 	}
 	
 	private ArrayList<Event> getEventsFromMessage(Message msg)
