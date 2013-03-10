@@ -9,13 +9,11 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlaySe
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 abstract class AsyncCalendarTask extends AsyncTask<Void, Void, Boolean> {
-	final GoogleCalendar activity;
-	final com.google.api.services.calendar.Calendar client;
+	final GoogleCalendarActivity activity;
 	
-	AsyncCalendarTask(GoogleCalendar activity)
+	AsyncCalendarTask(GoogleCalendarActivity activity)
 	{
 		this.activity = activity;
-		this.client = activity.client;
 	}
 
 	@Override
@@ -28,7 +26,7 @@ abstract class AsyncCalendarTask extends AsyncTask<Void, Void, Boolean> {
 		          availabilityException.getConnectionStatusCode());
 		    } catch (UserRecoverableAuthIOException userRecoverableException) {
 		      activity.startActivityForResult(
-		          userRecoverableException.getIntent(), GoogleCalendar.REQUEST_AUTHORIZATION);
+		          userRecoverableException.getIntent(), GoogleCalendarActivity.REQUEST_AUTHORIZATION);
 		    } catch (IOException e) {
 		    	Log.d("AsyncCalendarTask",e.getMessage());
 		    }

@@ -1,10 +1,7 @@
 package com.appvengers.Jarvis;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 
 public class AsyncNewEventTask extends AsyncCalendarTask {
@@ -14,7 +11,7 @@ public class AsyncNewEventTask extends AsyncCalendarTask {
 	 EventDateTime startTime; 
 	 EventDateTime endTime;
 	
-	AsyncNewEventTask(GoogleCalendar activity, String summary, String description, EventDateTime startTime, EventDateTime endTime)
+	AsyncNewEventTask(GoogleCalendarActivity activity, String summary, String description, EventDateTime startTime, EventDateTime endTime)
 	{
 		super(activity);
 		this.summary = summary;
@@ -32,7 +29,7 @@ public class AsyncNewEventTask extends AsyncCalendarTask {
 		event.setEnd(endTime);
 		event.setAttendees(null);
 		event.setReminders(null);
-		Event createdEvent = client.events().insert(activity.calendarId, event).execute();
+		Event createdEvent = GoogleCalendar.getInstance().client.events().insert(GoogleCalendar.getInstance().calendarId, event).execute();
 		if(createdEvent!=null)
 			activity.showSuccess();
 

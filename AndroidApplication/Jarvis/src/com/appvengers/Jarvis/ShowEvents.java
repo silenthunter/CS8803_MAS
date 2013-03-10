@@ -19,7 +19,7 @@ public class ShowEvents extends Activity {
 		
 		RadioGroup list = (RadioGroup)findViewById(R.id.event_list);
 		list.removeAllViews();
-		for(Event e : GoogleCalendar.currentEvents)
+		for(Event e : GoogleCalendar.getInstance().requestedEvents)
 		{
 			RadioButton b = new RadioButton(this);
 			b.setText(e.getSummary());
@@ -43,7 +43,7 @@ public class ShowEvents extends Activity {
 		{
 			RadioButton selected = (RadioButton)group.findViewById(checkedId);
 			String selectedText = selected.getText().toString();
-			toRet.putExtra(GoogleCalendar.SELECTED_EVENT_STRING, selectedText);
+			toRet.putExtra(GoogleCalendarActivity.SELECTED_EVENT_STRING, selectedText);
 			setResult(Activity.RESULT_OK,toRet);
 		}
 		else

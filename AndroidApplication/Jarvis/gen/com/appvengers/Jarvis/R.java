@@ -26,15 +26,17 @@ public final class R {
     }
     public static final class layout {
         public static final int activity_choose__calendar=0x7f030000;
-        public static final int activity_main=0x7f030001;
-        public static final int activity_show_events=0x7f030002;
-        public static final int activity_showsuccess=0x7f030003;
+        public static final int activity_google_calendar=0x7f030001;
+        public static final int activity_main=0x7f030002;
+        public static final int activity_show_events=0x7f030003;
+        public static final int activity_showsuccess=0x7f030004;
     }
     public static final class menu {
         public static final int activity_add_event=0x7f060000;
         public static final int activity_choose__calendar=0x7f060001;
-        public static final int activity_main=0x7f060002;
-        public static final int activity_show_events=0x7f060003;
+        public static final int activity_google_calendar=0x7f060002;
+        public static final int activity_main=0x7f060003;
+        public static final int activity_show_events=0x7f060004;
     }
     public static final class string {
         public static final int add_another_event_button=0x7f04000d;

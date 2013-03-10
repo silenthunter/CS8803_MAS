@@ -19,7 +19,7 @@ public class Choose_Calendar extends Activity {
 		setContentView(R.layout.activity_choose__calendar);
 		RadioGroup group = (RadioGroup)findViewById(R.id.CalendarSelect);
 		Intent intent = getIntent();
-		ArrayList<String> calendarStrings = intent.getStringArrayListExtra(GoogleCalendar.CALENDAR_LIST_STRING);
+		ArrayList<String> calendarStrings = intent.getStringArrayListExtra(GoogleCalendarActivity.CALENDAR_LIST_STRING);
 		for(String title:calendarStrings)
 		{
 			RadioButton button = new RadioButton(this);
@@ -46,7 +46,7 @@ public class Choose_Calendar extends Activity {
 		{
 			RadioButton selected = (RadioButton)group.findViewById(checkedId);
 			String selectedText = selected.getText().toString();
-			toRet.putExtra(GoogleCalendar.SELECTED_CALENDAR_STRING, selectedText);
+			toRet.putExtra(GoogleCalendarActivity.SELECTED_CALENDAR_STRING, selectedText);
 			setResult(Activity.RESULT_OK,toRet);
 		}
 		else

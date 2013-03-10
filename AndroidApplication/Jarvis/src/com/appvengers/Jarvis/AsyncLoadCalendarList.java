@@ -1,22 +1,20 @@
 package com.appvengers.Jarvis;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
 import com.google.api.services.calendar.model.CalendarList;
 import com.google.api.services.calendar.model.CalendarListEntry;
 
 public class AsyncLoadCalendarList extends AsyncCalendarTask {
 	
-	AsyncLoadCalendarList(GoogleCalendar activity)
+	AsyncLoadCalendarList(GoogleCalendarActivity activity)
 	{
 		super(activity);
 	}
 
 	@Override
 	protected void doInBackground() throws IOException {
-		CalendarList calList = client.calendarList().list().setFields("items(id,summary)").execute();
+		CalendarList calList = GoogleCalendar.getInstance().client.calendarList().list().setFields("items(id,summary)").execute();
     	List<CalendarListEntry> list = calList.getItems();
     	//ArrayList<String> names = new ArrayList<String>();
     	for(CalendarListEntry entry : list)
@@ -27,7 +25,7 @@ public class AsyncLoadCalendarList extends AsyncCalendarTask {
     	activity.selectACalendar();
 
 	}
-	static void run(GoogleCalendar activity)
+	static void run(GoogleCalendarActivity activity)
 	{
 		new AsyncLoadCalendarList(activity).execute();
 	}
