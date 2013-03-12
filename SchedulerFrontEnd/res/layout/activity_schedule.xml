@@ -52,4 +52,18 @@
         </LinearLayout>
     </ScrollView>
 
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/scrollView1"
+        android:layout_below="@+id/scrollView1"
+        android:divider="@drawable/divider"
+        android:showDividers="beginning|middle|end" >
+
+            <scheduler.android.EventRow android:layout_height="wrap_content" android:layout_width="fill_parent"/>
+            <scheduler.android.EventRow android:layout_height="wrap_content" android:layout_width="fill_parent"/>
+            <scheduler.android.EventRow android:layout_height="wrap_content" android:layout_width="fill_parent"/>   
+
+    </TableLayout>
+
 </RelativeLayout>

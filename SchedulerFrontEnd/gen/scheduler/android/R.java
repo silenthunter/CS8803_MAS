@@ -144,6 +144,7 @@ containing a value of this type.
     }
     public static final class drawable {
         public static final int contactInfo=0x7f020001;
+        public static final int divider=0x7f020002;
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
@@ -152,8 +153,9 @@ containing a value of this type.
         public static final int BtnUpdateSchedule=0x7f04000d;
         public static final int BtnViewSchedule=0x7f04000b;
         public static final int TxtWelcome=0x7f040005;
-        public static final int action_settings=0x7f040011;
+        public static final int action_settings=0x7f040012;
         public static final int content=0x7f040008;
+        public static final int eventName=0x7f040011;
         public static final int handle=0x7f040009;
         public static final int hybrid=0x7f040004;
         public static final int none=0x7f040000;
@@ -169,6 +171,7 @@ containing a value of this type.
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int activity_schedule=0x7f030001;
+        public static final int event_row=0x7f030002;
     }
     public static final class menu {
         public static final int main=0x7f090000;
