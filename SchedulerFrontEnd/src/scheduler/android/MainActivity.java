@@ -69,7 +69,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View arg0)
 			{
-				setContentView(R.layout.activity_schedule);
+				Intent newIntent = new Intent(getApplicationContext(), Schedule.class);
+				startActivity(newIntent);
 			}
 		});
 	}

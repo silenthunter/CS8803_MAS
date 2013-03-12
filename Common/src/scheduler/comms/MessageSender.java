@@ -145,7 +145,7 @@ public class MessageSender
 			GZIPInputStream inputStream = new GZIPInputStream(bin);
 			
 			//TODO: Dynamic array
-			byte[] buffer = new byte[100000000];
+			byte[] buffer = new byte[10000000];
 			
 			int readSoFar = 0;
 			int read = 0;
@@ -236,6 +236,7 @@ public class MessageSender
 		try {
 			outStream.write(lengthArr);
 			outStream.write(arr);
+			outStream.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
