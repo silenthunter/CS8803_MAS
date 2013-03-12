@@ -19,11 +19,6 @@
         android:text="Welcome to the AppVenger Scheduler"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <QuickContactBadge
-        android:id="@+id/profileImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <SlidingDrawer
         android:id="@+id/slidingDrawer1"
         android:layout_width="match_parent"
@@ -65,5 +60,13 @@
                 android:text="Compute Schedule" />
         </LinearLayout>
     </SlidingDrawer>
+
+    <QuickContactBadge
+        android:id="@+id/profileImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        android:minHeight="64dp"
+        android:minWidth="64dp" />
 
 </RelativeLayout>
