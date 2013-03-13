@@ -23,6 +23,7 @@ import android.widget.TableLayout;
 public class Schedule extends Activity {
 	
 	final private ArrayList<Event> userEvents = new ArrayList<Event>();
+	public static final int GET_EVENTS = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class Schedule extends Activity {
 						//TODO: Don't hardcode
 						MessageSender sender = new MessageSender("ec2-50-19-65-128.compute-1.amazonaws.com", 8000);
 						sender.connect();
+						
 						ArrayList<ArrayList<Event>> schedules = sender.getSchedules(3);
 						
 						ArrayList<Event> schedule = schedules.get(0);

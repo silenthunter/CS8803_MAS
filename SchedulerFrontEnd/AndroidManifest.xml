@@ -32,6 +32,14 @@
             android:name="scheduler.android.Schedule"
             android:label="@string/title_activity_schedule" >
         </activity>
+        <activity
+            android:name="scheduler.android.GoogleCalendarActivity"
+            android:label="@string/title_activity_schedule" >
+        </activity>
+        <activity
+            android:name="scheduler.android.ChooseCalendar"
+            android:label="@string/title_activity_choose_calendar" >
+        </activity>
     </application>
 
 </manifest>

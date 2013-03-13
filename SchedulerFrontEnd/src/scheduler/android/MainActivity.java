@@ -1,8 +1,13 @@
 package scheduler.android;
 
+import java.util.ArrayList;
+
+import scheduler.comms.MessageSender;
+
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.api.services.calendar.model.Event;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +27,8 @@ public class MainActivity extends Activity {
 	Account account = null;
 	
 	final static int RESULT_CODE = 7;
+	final static int AUTHORIZE = 8;
+	final static int GET_ALL_EVENTS = 9;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -29,9 +36,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		AccountManager accMan = AccountManager.get(this);
-		Account[] accounts = accMan.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-		account = accounts[0];
+		startActivityForResult(new Intent(this,GoogleCalendarActivity.class),AUTHORIZE);
 		
 		class AuthGetter extends AsyncTask<Activity, Integer, Long>
 		{
@@ -40,7 +45,8 @@ public class MainActivity extends Activity {
 			protected Long doInBackground(Activity... arg0) {
 				try
 				{
-					authToken = GoogleAuthUtil.getToken(arg0[0], account.name, "oauth2:https://www.googleapis.com/auth/userinfo.email");
+					authToken = GoogleCalendar.getInstance().credential.getToken();
+					account = GoogleCalendar.getInstance().credential.getSelectedAccount();
 					System.out.println(authToken);
 				}
 				catch(UserRecoverableAuthException e)
@@ -52,10 +58,35 @@ public class MainActivity extends Activity {
 			}
 		}
 		
+		startActivityForResult(new Intent(this,GoogleCalendarActivity.class),GET_ALL_EVENTS);
+		addAllEventsToServer();
+		
 		new AuthGetter().execute(this);
 		
 		registerButtons();
 		initQuickContact();
+	}
+	
+	private void addAllEventsToServer() {
+		MessageSender sender = new MessageSender("ec2-50-19-65-128.compute-1.amazonaws.com", 8000);
+		sender.connect();
+		ArrayList<scheduler.events.Event> events = new ArrayList<scheduler.events.Event>();
+		for(Event e :GoogleCalendar.getInstance().requestedEvents)
+		{
+			scheduler.events.Event event = new scheduler.events.Event(e.getStart().getDateTime().getValue(), (int)(e.getEnd().getDateTime().getValue()-e.getStart().getDateTime().getValue()));
+			event.setName(e.getSummary());
+			event.lock();
+			events.add(event);
+		}
+		sender.addEvents(events, 3);
+		
+	}
+
+	@Override
+	public void startActivityForResult(Intent intent, int requestCode)
+	{
+		intent.putExtra("requestCode", requestCode);
+        super.startActivityForResult(intent, requestCode);
 	}
 	
 	private void registerButtons()

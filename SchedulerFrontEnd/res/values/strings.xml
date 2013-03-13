@@ -11,5 +11,7 @@
     <string name="title_activity_schedule">Schedule</string>
     <drawable name="contactInfo">#FFFFFF</drawable>
     <drawable name="divider">#000000</drawable>
+    <string name="button_ok">Ok</string>
+    <string name="title_activity_choose_calendar">Choose a Calendar</string>
 
 </resources>
