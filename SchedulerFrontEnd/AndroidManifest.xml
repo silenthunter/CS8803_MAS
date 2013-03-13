@@ -36,6 +36,10 @@
             android:name="scheduler.android.AddEvent"
             android:label="@string/title_activity_add_event" >
         </activity>
+        <activity
+            android:name="scheduler.android.EventView"
+            android:label="@string/title_activity_event_view" >
+        </activity>
     </application>
 
 </manifest>

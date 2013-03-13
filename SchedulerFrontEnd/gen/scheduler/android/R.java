@@ -148,51 +148,55 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int BtnCreateSchedule=0x7f04001a;
-        public static final int BtnNewEvent=0x7f040018;
-        public static final int BtnUpdateSchedule=0x7f04001b;
-        public static final int BtnViewSchedule=0x7f040019;
-        public static final int TxtWelcome=0x7f040013;
-        public static final int action_settings=0x7f040021;
+        public static final int BtnCreateSchedule=0x7f04001c;
+        public static final int BtnNewEvent=0x7f04001a;
+        public static final int BtnUpdateSchedule=0x7f04001d;
+        public static final int BtnViewSchedule=0x7f04001b;
+        public static final int TxtWelcome=0x7f040015;
+        public static final int action_settings=0x7f040023;
         public static final int btnSubmit=0x7f040012;
-        public static final int content=0x7f040016;
+        public static final int content=0x7f040018;
         public static final int eventDate=0x7f04000f;
-        public static final int eventName=0x7f04001f;
+        public static final int eventName=0x7f040021;
         public static final int eventTime=0x7f04000d;
-        public static final int handle=0x7f040017;
+        public static final int handle=0x7f040019;
         public static final int hybrid=0x7f040004;
         public static final int lblEventName=0x7f040006;
+        public static final int lblViewDateTime=0x7f040014;
+        public static final int lblViewEventName=0x7f04000e;
+        public static final int lblViewLocation=0x7f040013;
         public static final int none=0x7f040000;
         public static final int normal=0x7f040001;
-        public static final int profileImage=0x7f040014;
+        public static final int profileImage=0x7f040016;
         public static final int satellite=0x7f040002;
         public static final int scrollView1=0x7f040005;
-        public static final int slidingDrawer1=0x7f040015;
-        public static final int tblEvents=0x7f04001e;
+        public static final int slidingDrawer1=0x7f040017;
+        public static final int tblEvents=0x7f040020;
         public static final int terrain=0x7f040003;
-        public static final int textView1=0x7f04000e;
         public static final int textView2=0x7f04000c;
         public static final int textView3=0x7f040008;
         public static final int textView4=0x7f040010;
         public static final int textView5=0x7f04000a;
-        public static final int time=0x7f040020;
+        public static final int time=0x7f040022;
         public static final int txtEventDuration=0x7f040009;
         public static final int txtEventLocation=0x7f04000b;
         public static final int txtEventName=0x7f040007;
         public static final int txtPriority=0x7f040011;
-        public static final int updateProgress=0x7f04001c;
-        public static final int view1=0x7f04001d;
+        public static final int updateProgress=0x7f04001e;
+        public static final int view1=0x7f04001f;
     }
     public static final class layout {
         public static final int activity_add_event=0x7f030000;
-        public static final int activity_main=0x7f030001;
-        public static final int activity_schedule=0x7f030002;
-        public static final int event_row=0x7f030003;
+        public static final int activity_event_view=0x7f030001;
+        public static final int activity_main=0x7f030002;
+        public static final int activity_schedule=0x7f030003;
+        public static final int event_row=0x7f030004;
     }
     public static final class menu {
         public static final int add_event=0x7f090000;
-        public static final int main=0x7f090001;
-        public static final int schedule=0x7f090002;
+        public static final int event_view=0x7f090001;
+        public static final int main=0x7f090002;
+        public static final int schedule=0x7f090003;
     }
     public static final class string {
         public static final int action_settings=0x7f050013;
@@ -261,6 +265,7 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f05000d;
         public static final int hello_world=0x7f050014;
         public static final int title_activity_add_event=0x7f050016;
+        public static final int title_activity_event_view=0x7f050017;
         public static final int title_activity_main=0x7f050012;
         public static final int title_activity_schedule=0x7f050015;
     }

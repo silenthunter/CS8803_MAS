@@ -14,5 +14,6 @@
     <drawable name="divider">#000000</drawable>
 
     <string name="title_activity_add_event">AddEvent</string>
+    <string name="title_activity_event_view">EventView</string>
 
 </resources>

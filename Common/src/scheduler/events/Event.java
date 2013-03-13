@@ -1,9 +1,15 @@
 package scheduler.events;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 
-public class Event
+public class Event implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6573194170753336702L;
+
 	final static short DEFAULT_PRIORITY = 3;
 	
 	private int UID;
