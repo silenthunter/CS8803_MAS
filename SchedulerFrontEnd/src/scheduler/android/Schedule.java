@@ -1,5 +1,6 @@
 package scheduler.android;
 
+import java.io.Serializable;
 import java.text.AttributedString;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.View;
@@ -24,6 +27,7 @@ public class Schedule extends Activity {
 	
 	final private ArrayList<Event> userEvents = new ArrayList<Event>();
 	public static final int GET_EVENTS = 0;
+	final Context schedContext = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,7 @@ public class Schedule extends Activity {
 						MessageSender sender = new MessageSender("ec2-50-19-65-128.compute-1.amazonaws.com", 8000);
 						sender.connect();
 						
-						ArrayList<ArrayList<Event>> schedules = sender.getSchedules(8);
+						ArrayList<ArrayList<Event>> schedules = sender.getSchedules(5);
 						
 						ArrayList<Event> schedule = schedules.get(0);
 						
@@ -80,6 +84,7 @@ public class Schedule extends Activity {
 					@Override
 					public void handleMessage(Message msg)
 					{
+						int idx = 0;
 						for(Event ev : userEvents)
 						{
 							long time = ev.getStartTime();
@@ -87,7 +92,7 @@ public class Schedule extends Activity {
 							eventTime.toString();
 							SimpleDateFormat format = new SimpleDateFormat("MM/dd HH:mm:ss");
 							String strTime = format.format(eventTime);
-							EventRow row = new EventRow(eventTable.getContext(), null, ev.getName(), strTime);
+							EventRow row = new EventRow(eventTable.getContext(), null, ev.getName(), strTime, idx++, new MyHandler());
 						
 							eventTable.addView(row);
 						}
@@ -100,6 +105,23 @@ public class Schedule extends Activity {
 				new EventFetch().execute(updateHandler);
 			}
 		});
+		
+	}
+	
+	class MyHandler extends Handler
+	{
+		@Override
+		public void handleMessage(Message msg)
+		{
+			int idx = msg.what;
+			super.handleMessage(msg);
+			
+			Intent intent = new Intent(getApplicationContext(), EventView.class);
+			Event ev = userEvents.get(idx);
+			intent.putExtra("Event", (Serializable)ev);
+			
+			startActivity(intent);
+		}
 	}
 
 	@Override

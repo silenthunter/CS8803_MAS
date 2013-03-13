@@ -16,5 +16,6 @@
     <string name="title_activity_choose_calendar">Choose a Calendar</string>
 
     <string name="title_activity_add_event">AddEvent</string>
+    <string name="title_activity_event_view">EventView</string>
 
 </resources>

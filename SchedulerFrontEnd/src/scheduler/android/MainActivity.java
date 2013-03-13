@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 						}
 					}
 				}
-				sender.addEvents(events, 8);
+				sender.addEvents(events, 5);
 				sender.disconnect();
 				return null;
 			}

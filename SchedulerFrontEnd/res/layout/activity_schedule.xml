@@ -57,9 +57,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignLeft="@+id/scrollView1"
-        android:layout_below="@+id/scrollView1"
-        android:divider="@drawable/divider"
-        android:showDividers="beginning|middle|end" >
+        android:layout_below="@+id/scrollView1" >
 
     </TableLayout>
 

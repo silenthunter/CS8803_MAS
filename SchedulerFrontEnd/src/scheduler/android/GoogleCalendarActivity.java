@@ -45,12 +45,15 @@ public class GoogleCalendarActivity extends Activity {
 	  public static final String PREF_CALENDAR = "com.appvengers.Jarvis.accountName";
 	  boolean edit = false;
 	  Event eventToEdit = null;
+	  private int request;
 
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    // view and menu
 	    setContentView(R.layout.activity_main);
+	    Intent intent = getIntent();
+	    request = intent.getIntExtra("requestCode",-1);
 	    // Google Accounts
 	    SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
 	    GoogleCalendar.getInstance().setupClient(this, settings);
@@ -58,12 +61,16 @@ public class GoogleCalendarActivity extends Activity {
 	    {
 	    	haveGooglePlayServices();
 		}
-	    Intent intent = getIntent();
-	    int request = intent.getIntExtra("requestCode",-1);
+	    
+	    
+	    
 	    switch(request) {
 	    case MainActivity.AUTHORIZE:
+	    	
+	    	break;
 	    case MainActivity.GET_ALL_EVENTS:
 	    	getEvents(null,null);
+	    	break;
 	    	
 	    }
 	    		
@@ -101,8 +108,11 @@ public class GoogleCalendarActivity extends Activity {
 		            editor.commit();
 		            if(GoogleCalendar.getInstance().calendarId==null)
 		            	AsyncLoadCalendarList.run(this);
-		            setResult(Activity.RESULT_OK,new Intent());
-		            finish();
+		            else
+		            {
+			            setResult(Activity.RESULT_OK,new Intent());
+			            finish();
+		            }
 		          }
 		        }
 		        break;
@@ -116,6 +126,9 @@ public class GoogleCalendarActivity extends Activity {
 			          editor.putString(PREF_CALENDAR, calId);
 			          editor.commit();
 			          GoogleCalendar.getInstance().calendarId = calId;
+			          Intent toRet = new Intent();
+				  	  setResult(Activity.RESULT_OK,toRet);
+				  	  finish();
 		    	  }
 		    	  break;
 		        
@@ -132,6 +145,13 @@ public class GoogleCalendarActivity extends Activity {
 		    } else {
 		    	if(GoogleCalendar.getInstance().calendarId==null)
 		    		AsyncLoadCalendarList.run(this);
+		    	else if(request==MainActivity.AUTHORIZE)
+		    	{
+		    		Intent toRet = new Intent();
+			  	  	setResult(Activity.RESULT_OK,toRet);
+			  	  	finish();
+		    	}
+		    		
 		    }
 		  }
 	  private void chooseAccount() {
@@ -195,6 +215,12 @@ public class GoogleCalendarActivity extends Activity {
   {
 	  
 	  
+  }
+  public void loadCalendarSuccess()
+  {
+	  Intent toRet = new Intent();
+	  setResult(Activity.RESULT_OK,toRet);
+	  finish();
   }
 
 }
