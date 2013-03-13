@@ -54,7 +54,7 @@ public class Schedule extends Activity {
 						MessageSender sender = new MessageSender("ec2-50-19-65-128.compute-1.amazonaws.com", 8000);
 						sender.connect();
 						
-						ArrayList<ArrayList<Event>> schedules = sender.getSchedules(3);
+						ArrayList<ArrayList<Event>> schedules = sender.getSchedules(8);
 						
 						ArrayList<Event> schedule = schedules.get(0);
 						

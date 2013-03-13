@@ -62,7 +62,6 @@ public class GoogleCalendarActivity extends Activity {
 	    int request = intent.getIntExtra("requestCode",-1);
 	    switch(request) {
 	    case MainActivity.AUTHORIZE:
-	    	break;
 	    case MainActivity.GET_ALL_EVENTS:
 	    	getEvents(null,null);
 	    	
@@ -102,6 +101,8 @@ public class GoogleCalendarActivity extends Activity {
 		            editor.commit();
 		            if(GoogleCalendar.getInstance().calendarId==null)
 		            	AsyncLoadCalendarList.run(this);
+		            setResult(Activity.RESULT_OK,new Intent());
+		            finish();
 		          }
 		        }
 		        break;
@@ -115,26 +116,6 @@ public class GoogleCalendarActivity extends Activity {
 			          editor.putString(PREF_CALENDAR, calId);
 			          editor.commit();
 			          GoogleCalendar.getInstance().calendarId = calId;
-		    	  }
-		    	  break;
-		    	  
-		      case SHOW_SUCCESS:
-		    	  break;
-		      case SHOW_EVENTS:
-		    	  if(resultCode== Activity.RESULT_OK && data != null && data.getExtras() != null)
-		    	  {
-		    		  String eventSummary = data.getStringExtra(SELECTED_EVENT_STRING);
-		    		  Event toEdit = null;
-		    		  for(Event e : GoogleCalendar.getInstance().requestedEvents)
-		    		  {
-		    			  if(e.getSummary().equals(eventSummary))
-		    				  toEdit=e;
-		    		  }
-		    		  if(toEdit!=null)
-		    		  {
-		    			  edit=true;
-		    			  eventToEdit = toEdit;
-		    		  }
 		    	  }
 		    	  break;
 		        
@@ -202,7 +183,9 @@ public class GoogleCalendarActivity extends Activity {
   }
   public void getEventsSuccess()
   {
-	  
+	  Intent toRet = new Intent();
+	  setResult(Activity.RESULT_OK,toRet);
+	  finish();
   }
   public void addEventSuccess()
   {

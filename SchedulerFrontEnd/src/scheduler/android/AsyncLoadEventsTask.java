@@ -24,8 +24,12 @@ public class AsyncLoadEventsTask extends AsyncCalendarTask {
 	@Override
 	protected void doInBackground() throws IOException {
 		String pageToken = null;
-		do{
-			Events eventsObj = GoogleCalendar.getInstance().client.events().list(GoogleCalendar.getInstance().calendarId).setPageToken(pageToken).setSingleEvents(true).setTimeMin(timeMin).setTimeMax(timeMax).setFields("items").execute();
+		do{ 
+			Events eventsObj;
+			if(timeMin==null||timeMax==null)
+				eventsObj = GoogleCalendar.getInstance().client.events().list(GoogleCalendar.getInstance().calendarId).setPageToken(pageToken).setSingleEvents(true).setFields("items").execute();
+			else
+				eventsObj = GoogleCalendar.getInstance().client.events().list(GoogleCalendar.getInstance().calendarId).setPageToken(pageToken).setSingleEvents(true).setTimeMin(timeMin).setTimeMax(timeMax).setFields("items").execute();
 			List<Event> items = eventsObj.getItems();
 			events.addAll(items);
 			
