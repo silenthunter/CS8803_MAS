@@ -104,6 +104,18 @@ public class MainActivity extends Activity {
 				startActivity(newIntent);
 			}
 		});
+		
+		final Button addEvent = (Button)findViewById(R.id.BtnNewEvent);
+		addEvent.setOnClickListener(new View.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View arg0)
+			{
+				Intent newIntent = new Intent(getApplicationContext(), AddEvent.class);
+				startActivity(newIntent);
+			}
+		});
 	}
 	
 	private void initQuickContact()

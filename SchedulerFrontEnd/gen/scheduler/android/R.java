@@ -30,39 +30,55 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int BtnCreateSchedule=0x7f090008;
-        public static final int BtnNewEvent=0x7f090006;
-        public static final int BtnUpdateSchedule=0x7f090009;
-        public static final int BtnViewSchedule=0x7f090007;
-        public static final int CalendarSelect=0x7f090000;
-        public static final int TxtWelcome=0x7f090001;
-        public static final int action_settings=0x7f090010;
-        public static final int content=0x7f090004;
-        public static final int eventName=0x7f09000e;
-        public static final int handle=0x7f090005;
-        public static final int profileImage=0x7f090002;
-        public static final int scrollView1=0x7f09000c;
-        public static final int slidingDrawer1=0x7f090003;
-        public static final int tblEvents=0x7f09000d;
-        public static final int time=0x7f09000f;
-        public static final int updateProgress=0x7f09000a;
-        public static final int view1=0x7f09000b;
+        public static final int BtnCreateSchedule=0x7f090016;
+        public static final int BtnNewEvent=0x7f090014;
+        public static final int BtnUpdateSchedule=0x7f090017;
+        public static final int BtnViewSchedule=0x7f090015;
+        public static final int CalendarSelect=0x7f09000e;
+        public static final int TxtWelcome=0x7f09000f;
+        public static final int action_settings=0x7f09001d;
+        public static final int btnSubmit=0x7f09000d;
+        public static final int content=0x7f090012;
+        public static final int eventDate=0x7f09000a;
+        public static final int eventName=0x7f09001b;
+        public static final int eventTime=0x7f090008;
+        public static final int handle=0x7f090013;
+        public static final int lblEventName=0x7f090001;
+        public static final int profileImage=0x7f090010;
+        public static final int scrollView1=0x7f090000;
+        public static final int slidingDrawer1=0x7f090011;
+        public static final int tblEvents=0x7f09001a;
+        public static final int textView1=0x7f090009;
+        public static final int textView2=0x7f090007;
+        public static final int textView3=0x7f090003;
+        public static final int textView4=0x7f09000b;
+        public static final int textView5=0x7f090005;
+        public static final int time=0x7f09001c;
+        public static final int txtEventDuration=0x7f090004;
+        public static final int txtEventLocation=0x7f090006;
+        public static final int txtEventName=0x7f090002;
+        public static final int txtPriority=0x7f09000c;
+        public static final int updateProgress=0x7f090018;
+        public static final int view1=0x7f090019;
     }
     public static final class layout {
-        public static final int activity_choose__calendar=0x7f030000;
-        public static final int activity_main=0x7f030001;
-        public static final int activity_schedule=0x7f030002;
-        public static final int event_row=0x7f030003;
+        public static final int activity_add_event=0x7f030000;
+        public static final int activity_choose__calendar=0x7f030001;
+        public static final int activity_main=0x7f030002;
+        public static final int activity_schedule=0x7f030003;
+        public static final int event_row=0x7f030004;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
-        public static final int schedule=0x7f080001;
+        public static final int add_event=0x7f080000;
+        public static final int main=0x7f080001;
+        public static final int schedule=0x7f080002;
     }
     public static final class string {
         public static final int action_settings=0x7f050002;
         public static final int app_name=0x7f050000;
         public static final int button_ok=0x7f050005;
         public static final int hello_world=0x7f050003;
+        public static final int title_activity_add_event=0x7f050007;
         public static final int title_activity_choose_calendar=0x7f050006;
         public static final int title_activity_main=0x7f050001;
         public static final int title_activity_schedule=0x7f050004;
