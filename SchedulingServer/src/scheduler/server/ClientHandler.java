@@ -62,6 +62,7 @@ public class ClientHandler extends Thread
 				ByteBuffer byteBuffer = ByteBuffer.wrap(sizeArr);
 				
 				int msgSize = byteBuffer.getInt();
+				boolean nonZero = msgSize != 0;
 				buff = new byte[msgSize];
 				
 				//Read data until the buffer is full
@@ -74,7 +75,7 @@ public class ClientHandler extends Thread
 				}
 				
 				//Don't process blank messages
-				if(msgSize > 0)
+				if(nonZero)
 					processMessage(buff);
 				
 				

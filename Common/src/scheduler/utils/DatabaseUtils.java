@@ -46,10 +46,13 @@ public class DatabaseUtils
 		try
 		{
 			stmt = conn.createStatement();
-			UID = stmt.executeUpdate("INSERT INTO Events (StartTime, Duration, Name, Location) " +
+			stmt.executeUpdate("INSERT INTO Events (StartTime, Duration, Name, Location) " +
 					"VALUES ('" + event.getStartTime() + "', " +
 							"'" + event.getDuration() + "', '" +
 							event.getName() + "', '" + event.getLocation() + "')", Statement.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.getGeneratedKeys();
+			if(rs != null && rs.next())
+				UID = rs.getInt(1);
 			
 		} 
 		catch (SQLException e)
@@ -147,7 +150,10 @@ public class DatabaseUtils
 		try
 		{
 			stmt = conn.createStatement();
-			UID = stmt.executeUpdate("INSERT INTO Users (Name) VALUES ('" + name + "')", Statement.RETURN_GENERATED_KEYS);
+			stmt.executeUpdate("INSERT INTO Users (Name) VALUES ('" + name + "')", Statement.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.getGeneratedKeys();
+			if(rs != null && rs.next())
+				UID = rs.getInt(1);
 		} 
 		catch(SQLException e)
 		{
@@ -182,8 +188,11 @@ public class DatabaseUtils
 		try
 		{
 			stmt = conn.createStatement();
-			UID = stmt.executeUpdate("INSERT INTO Inter(EventUID, UserUID, Priority) VALUES('" + eventUID +
+			stmt.executeUpdate("INSERT INTO Inter(EventUID, UserUID, Priority) VALUES('" + eventUID +
 					"', '" + userUID + "', '" + priority + "')", Statement.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.getResultSet();
+			if(rs != null && rs.next())
+				UID = rs.getInt(1);
 		}
 		catch(SQLException e)
 		{
