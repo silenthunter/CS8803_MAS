@@ -25,7 +25,8 @@
         android:layout_height="match_parent"
         android:content="@+id/content"
         android:handle="@+id/handle"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:topOffset="200dp" >
 
         <Button
             android:id="@+id/handle"

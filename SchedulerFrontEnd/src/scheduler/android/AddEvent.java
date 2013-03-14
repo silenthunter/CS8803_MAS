@@ -58,7 +58,7 @@ public class AddEvent extends Activity {
 						
 						ArrayList<Event> events = new ArrayList<Event>();
 						events.add(event);
-						sender.addEvents(events, 3);
+						sender.addEvents(events, 5);
 						
 						sender.disconnect();
 						

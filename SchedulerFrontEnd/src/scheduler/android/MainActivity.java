@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
 	final static int RESULT_CODE = 7;
 	final static int AUTHORIZE = 8;
 	final static int GET_ALL_EVENTS = 9;
+	final static String SERVER_ADDR = "ec2-50-19-65-128.compute-1.amazonaws.com";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -33,7 +34,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		startActivityForResult(new Intent(this,GoogleCalendarActivity.class),AUTHORIZE);
+		//startActivityForResult(new Intent(this,GoogleCalendarActivity.class),AUTHORIZE);
+		
+		registerButtons();
+	
 	}
 	
 	private void addAllEventsToServer() {
@@ -41,7 +45,7 @@ public class MainActivity extends Activity {
 		{
 			@Override
 			protected Long doInBackground(Integer... arg0) {
-				MessageSender sender = new MessageSender("ec2-50-19-65-128.compute-1.amazonaws.com", 8000);
+				MessageSender sender = new MessageSender(SERVER_ADDR, 8000);
 				sender.connect();
 				ArrayList<scheduler.events.Event> events = new ArrayList<scheduler.events.Event>();
 				ArrayList<Event> es = GoogleCalendar.getInstance().requestedEvents;
@@ -55,7 +59,7 @@ public class MainActivity extends Activity {
 						DateTime getDTEnd = getEnd.getDateTime();
 						if(getDTStart!=null&&getDTEnd!=null)
 						{
-							scheduler.events.Event event = new scheduler.events.Event(getDTStart.getValue(), (int)(getDTEnd.getValue()-getDTStart.getValue()));
+							scheduler.events.Event event = new scheduler.events.Event(getDTStart.getValue(), (int)(getDTEnd.getValue()-getDTStart.getValue() / 60000));
 							event.setName(e.getSummary());
 							event.lock();
 							events.add(event);
@@ -103,6 +107,33 @@ public class MainActivity extends Activity {
 			{
 				Intent newIntent = new Intent(getApplicationContext(), AddEvent.class);
 				startActivity(newIntent);
+			}
+		});
+		
+		final Button computeSchedule = (Button)findViewById(R.id.BtnCreateSchedule);
+		computeSchedule.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0)
+			{
+				class AysncComputeSchedule extends AsyncTask<Integer, Integer, Long>
+				{
+
+					@Override
+					protected Long doInBackground(Integer... arg0)
+					{
+						MessageSender snd = new MessageSender(SERVER_ADDR, 8000);
+						snd.connect();
+						
+						snd.createSchedule(arg0[0]);
+						snd.disconnect();
+						return null;
+					}
+					
+				}
+				
+				new AysncComputeSchedule().execute(5);
+				
 			}
 		});
 	}
