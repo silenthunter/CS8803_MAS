@@ -39,7 +39,7 @@
                         android:id="@+id/TextView22"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="3210 Project"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -67,7 +67,7 @@
                         android:id="@+id/TextView20"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="Group Meeting"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -95,7 +95,7 @@
                         android:id="@+id/TextView18"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="Class - 6535"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -123,7 +123,7 @@
                         android:id="@+id/TextView16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="Laundry"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -151,7 +151,7 @@
                         android:id="@+id/TextView14"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="Work"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -179,7 +179,7 @@
                         android:id="@+id/TextView12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="Dentist"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -207,7 +207,7 @@
                         android:id="@+id/TextView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="App Development"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -235,7 +235,7 @@
                         android:id="@+id/TextView08"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="Write Paper"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -263,7 +263,7 @@
                         android:id="@+id/TextView06"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="Play Video Games"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -291,7 +291,7 @@
                         android:id="@+id/TextView04"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="Homework"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -319,7 +319,7 @@
                         android:id="@+id/TextView02"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="More Homework"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
@@ -347,7 +347,7 @@
                         android:id="@+id/textView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class - 8803"
+                        android:text="Less Homework"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView

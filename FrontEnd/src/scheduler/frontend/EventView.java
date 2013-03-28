@@ -2,6 +2,9 @@ package scheduler.frontend;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.view.Menu;
 
 public class EventView extends Activity {

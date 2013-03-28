@@ -2,7 +2,10 @@ package scheduler.frontend;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,6 +15,20 @@ public class Schedule extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_schedule);
+		
+		AlertDialog.Builder bld = new AlertDialog.Builder(this);
+		bld.setMessage("Group Meeting");
+		bld.setTitle("Time for an Event!");
+		bld.setCancelable(true);
+		bld.setPositiveButton("Ok", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		bld.show();
 	}
 
 	@Override
