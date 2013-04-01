@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/GridLayout1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnCount="1" >
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="10dp"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
-        android:layout_column="0"
-        android:layout_gravity="left|top"
-        android:layout_row="0"
+        android:id="@+id/eventName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Class [8803 MAS]"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_column="0"
-        android:layout_gravity="right|top"
-        android:layout_row="0"
+        android:id="@+id/eventLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Klaus" />
 
-</GridLayout>
+    <TextView
+        android:id="@+id/eventTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</LinearLayout>
