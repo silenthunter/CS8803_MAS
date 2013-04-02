@@ -2,9 +2,15 @@ package scheduler.frontend;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+
+import scheduler.comms.MessageSender;
+import scheduler.events.Event;
 
 import android.os.Bundle;
+import android.provider.Settings.Global;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -43,7 +49,7 @@ public class EventView extends FragmentActivity {
 				//Check if it's valid data
 				if(checkValidation())
 				{
-
+					writeEvent();
 				}
 				
 			}
@@ -56,9 +62,9 @@ public class EventView extends FragmentActivity {
 		startTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
-			public void onFocusChange(View arg0, boolean arg1) {
+			public void onFocusChange(View arg0, boolean hasFocus) {
 				
-				if(arg1)
+				if(hasFocus)
 				{
 					DialogFragment timePicker = new TimePickerFragment();
 					Bundle args = new Bundle();
@@ -70,13 +76,22 @@ public class EventView extends FragmentActivity {
 			}
 		});
 		
-		startTime.setOnClickListener(new View.OnClickListener() {
+
+		//Listen for the end time click
+		final EditText endTime = (EditText)findViewById(R.id.addEventEndDate);
+		endTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
-			public void onClick(View arg0) {
+			public void onFocusChange(View v, boolean hasFocus) {
 				
-				//DialogFragment timePicker = new TimePickerFragment();
-				//timePicker.show(fragMan, "SelectTime");
+				if(hasFocus)
+				{
+					DialogFragment timePicker = new TimePickerFragment();
+					Bundle args = new Bundle();
+					args.putInt("editText", endTime.getId());
+					timePicker.setArguments(args);
+					timePicker.show(fragMan, "SelectTime");
+				}
 				
 			}
 		});
@@ -134,6 +149,65 @@ public class EventView extends FragmentActivity {
 		return true;
 	}
 	
+	private void writeEvent()
+	{
+		try
+		{
+			SimpleDateFormat dayFormat = new SimpleDateFormat("mm/dd/yy");
+			EditText txtDate = (EditText)findViewById(R.id.addEventDate);
+			String strDate = txtDate.toString();
+			Date dayOf = dayFormat.parse(strDate);
+			
+			EditText txtStartTime = (EditText)findViewById(R.id.addEventStartDate);
+			SimpleDateFormat format = new SimpleDateFormat("HH:mmaa");
+			String strStartTime = txtStartTime.toString();
+			Date startTimeDate = format.parse(strStartTime);
+			
+			EditText txtEndTime = (EditText)findViewById(R.id.addEventEndDate);
+			String strEndTime = txtEndTime.toString();
+			Date endTimeDate = format.parse(strEndTime);
+			
+			long startTime = dayOf.getTime() + startTimeDate.getTime();
+			
+			//Get the difference in minutes
+			short duration = (short)((endTimeDate.getTime() - startTimeDate.getTime()) / 60000);
+			
+			Event event = new Event(startTime, duration);
+			
+			//Set name
+			EditText txtName = (EditText)findViewById(R.id.addEventTitle);
+			event.setName(txtName.getText().toString());
+			
+			//Set location
+			EditText txtLocation = (EditText)findViewById(R.id.addEventLocation);
+			event.setLocation(txtLocation.getText().toString());
+			
+			//Events are locked
+			event.lock();
+			
+			//Write event to the server
+			MessageSender snd = new MessageSender(FrontendConstants.SERVER_ADDR, FrontendConstants.SERVER_PORT);
+			snd.connect();
+			ArrayList<Event> events = new ArrayList<Event>();
+			events.add(event);
+			snd.addEvents(events, FrontendConstants.USER_ID);
+			snd.disconnect();
+			
+			//Return to old scren
+			finish();
+			
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void onTimeSelected(int id, int hour, int minute)
+	{
+		EditText timeText = (EditText)findViewById(id);
+		timeText.setText(hour + ":" + minute);
+	}
+	
 	public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener
 	{
 		
@@ -156,8 +230,9 @@ public class EventView extends FragmentActivity {
 			if(args != null && args.containsKey("editText"))
 			{
 				int editTextId = args.getInt("editText");
-				EditText editText = (EditText)view.findViewById(editTextId);
-				editText.setText(hourOfDay + ":" + minute);
+				
+				EventView parentActivity = (EventView)getActivity();
+				parentActivity.onTimeSelected(editTextId, hourOfDay, minute);
 			}
 			
 		}
