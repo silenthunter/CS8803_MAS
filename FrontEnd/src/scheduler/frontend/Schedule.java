@@ -42,7 +42,7 @@ public class Schedule extends Activity {
 	{
 		final TableLayout scroll = (TableLayout)findViewById(R.id.event_table);
 		
-		final Button refreshBtn = (Button)findViewById(R.id.btnRefershEvents);
+		final Button refreshBtn = (Button)findViewById(R.id.btnAddEvent);
 		refreshBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
