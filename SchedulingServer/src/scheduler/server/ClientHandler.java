@@ -109,7 +109,16 @@ public class ClientHandler extends Thread
 		}
 		else if(msg.getType() == MessageType.CREATE_SCHEDULE)
 		{
-			SchedulingServer.writeToSQS(Integer.toString(msg.getUserID()));
+			String userID =Integer.toString(msg.getUserID());
+			ByteBuffer buffer = ByteBuffer.wrap(msg.getData());
+			
+			int strLen = buffer.getInt();
+			String retnID = "";
+			
+			for(int i = 0; i < strLen; i++)
+				retnID += buffer.getChar();
+			
+			SchedulingServer.writeToSQS(userID, retnID);
 		}
 		else if(msg.getType() == MessageType.REQUEST_SCHEDULE)
 		{

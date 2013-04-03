@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import com.google.android.gcm.GCMRegistrar;
+
 import scheduler.comms.MessageSender;
 import scheduler.events.Event;
 
@@ -16,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
@@ -29,12 +32,14 @@ import android.widget.TableLayout;
 public class Schedule extends Activity {
 	
 	ArrayList<Event> events = new ArrayList<Event>();
+	Context scheduleContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_schedule);
 		
+		initGCM();
 		initButtons();
 	}
 	
@@ -106,6 +111,40 @@ public class Schedule extends Activity {
 			}
 		});
 	}
+
+	private void initGCM()
+	{
+		GCMRegistrar.checkDevice(this);
+		GCMRegistrar.checkManifest(this);
+		
+		final String regID = GCMRegistrar.getRegistrationId(this);
+		if(regID.equals(""))
+			GCMRegistrar.register(this, FrontendConstants.SENDER_ID);
+		else
+			FrontendConstants.GCM_Reg_ID = regID;
+		
+		GCMIntentService.setCallback(this);
+		
+		scheduleContext = this;
+	}
+	
+	public void spawnPopup(final String title, final String message)
+	{
+	
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				AlertDialog.Builder bld = new AlertDialog.Builder(scheduleContext);
+				bld.setTitle(title);
+				bld.setMessage(message);
+				bld.setCancelable(false);
+				bld.setPositiveButton("Ok", null);
+				bld.show();
+				
+			}
+		});
+	}
 	
 	private void saveEvents()
 	{
@@ -128,6 +167,25 @@ public class Schedule extends Activity {
 		}
 	}
 
+	private void computeEvents()
+	{
+		class ComputeAsync extends AsyncTask<Integer, Integer, Integer>
+		{
+			@Override
+			protected Integer doInBackground(Integer... params)
+			{
+				MessageSender snd = new MessageSender(FrontendConstants.SERVER_ADDR, FrontendConstants.SERVER_PORT);
+				snd.connect();
+				snd.createSchedule(FrontendConstants.USER_ID, FrontendConstants.GCM_Reg_ID);
+				snd.disconnect();
+				return null;
+			}
+		}
+		
+		ComputeAsync async = new ComputeAsync();
+		async.execute();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -152,6 +210,10 @@ public class Schedule extends Activity {
 		{
 			Intent intent = new Intent(this, ItemView.class);
 			startActivity(intent);
+		}
+		else if(item.getItemId() == R.id.computeEvents)
+		{
+			computeEvents();
 		}
 		
 		// TODO Auto-generated method stub

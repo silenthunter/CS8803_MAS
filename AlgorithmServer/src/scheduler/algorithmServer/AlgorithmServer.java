@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -12,9 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.zip.GZIPOutputStream;
-
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import scheduler.events.Event;
 import scheduler.geneticAlgorithm.Individual;
@@ -34,6 +32,7 @@ import com.amazonaws.services.sqs.model.GetQueueUrlResult;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
+import com.google.android.gcm.server.Sender;
 
 public class AlgorithmServer extends Thread
 {
@@ -42,12 +41,14 @@ public class AlgorithmServer extends Thread
 	private String sqsURL;
 	private AmazonSQSClient sqsClient;
 	private AmazonS3 s3;
+	Sender gcmSender;
 	
 	private ExecutorService threadPool;
 	private int threads;
 	private boolean running = true;
 	private HashMap<Future<ArrayList<Individual>>, Message> futures = new HashMap<Future<ArrayList<Individual>>, Message>();
 	private final HashMap<Integer, ArrayList<Individual>> writeQueue = new HashMap<Integer, ArrayList<Individual>>();
+	private HashMap<Integer, String> gcmMap = new HashMap<Integer, String>();
 	
 	private void initSQS()
 	{
@@ -81,7 +82,14 @@ public class AlgorithmServer extends Thread
 				{
 					System.out.println("Message Received");
 					
-					int uid = Integer.parseInt(msg.getBody());
+					String msgBody = msg.getBody();
+					int idx = msgBody.indexOf('\n');
+					String userID = msgBody.substring(0, idx);
+					String regID = msgBody.substring(idx + 1);
+					
+					int uid = Integer.parseInt(userID);
+					
+					gcmMap.put(uid, regID);
 					
 					//Create and submit the task
 					Callable<ArrayList<Individual>> thr = new GeneticAlgorithmThread(uid);
@@ -115,7 +123,13 @@ public class AlgorithmServer extends Thread
 					try
 					{
 						population = callback.get();
-						int uid = Integer.parseInt(futures.get(callback).getBody());
+						
+						String msgBody = futures.get(callback).getBody();
+						int idx = msgBody.indexOf('\n');
+						String userID = msgBody.substring(0, idx);
+						String regID = msgBody.substring(idx + 1);
+						
+						int uid = Integer.parseInt(userID);
 						
 						ConvertPopulationToSchedule(uid, population);
 						
@@ -147,6 +161,13 @@ public class AlgorithmServer extends Thread
 	{
 		synchronized(writeQueue)
 		{
+			ArrayList<Event> events = population.get(0).getEvents();
+			for(Event ev : events)
+			{
+				Date d = new Date(ev.getStartTime());
+				System.out.println("CPS: " + d.toString());
+			}
+			
 			writeQueue.put(UID, population);
 			writeQueue.notify();
 		}
@@ -220,14 +241,24 @@ public class AlgorithmServer extends Thread
 								os.write(lengthArr);
 								for(Event ev : population.get(i).getEvents())
 								{
+									if(i == 0)
+									{
+										Date d = new Date(ev.getStartTime());
+										System.out.println("CPS: " + d.toString());
+									}
 									os.write(Event.writeToBuffer(ev));
 								}
 							}
 							
 							os.close();
 							
-							//TODO: Notify GCM that the new file is ready						
+							//Write to S3			
 							writeToS3(Integer.toString(uid), binFile.toByteArray());
+							
+							//Alert the user
+							com.google.android.gcm.server.Message message = 
+									new com.google.android.gcm.server.Message.Builder().build();
+							gcmSender.send(message, gcmMap.get(uid), 5);
 							
 						} catch(IOException e){e.printStackTrace();}
 					}
@@ -243,6 +274,8 @@ public class AlgorithmServer extends Thread
 		
 		initSQS();
 		initS3();
+		gcmSender = new Sender("AIzaSyDe2-Ars_8EGVwkLU2xDzRWHvB046tKUkw");
+		
 		startS3Thread();
 		threadPool = Executors.newFixedThreadPool(threads);
 	}

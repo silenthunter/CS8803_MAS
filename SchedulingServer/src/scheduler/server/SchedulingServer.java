@@ -25,11 +25,11 @@ public class SchedulingServer
 		sqsURL = res.getQueueUrl();
 	}
 	
-	public static void writeToSQS(String message)
+	public static void writeToSQS(String message, String RetnID)
 	{
 		synchronized(sqsLock)
 		{
-			SendMessageRequest msgReq = new SendMessageRequest(sqsURL, message);
+			SendMessageRequest msgReq = new SendMessageRequest(sqsURL, message + "\n" + RetnID);
 			sqsClient.sendMessage(msgReq);
 		}
 		
