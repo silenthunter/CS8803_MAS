@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
@@ -120,6 +121,27 @@ public class Schedule extends Activity {
 			GCMRegistrar.register(this, FrontendConstants.SENDER_ID);
 		else
 			FrontendConstants.GCM_Reg_ID = regID;
+		
+		GCMIntentService.setCallback(this);
+	}
+	
+	public void spawnPopup(final String title, final String message)
+	{
+		final Context context = this;
+		Handler handle = new Handler()
+		{
+			@Override
+			public void handleMessage(Message msg) {
+				AlertDialog.Builder bld = new AlertDialog.Builder(context);
+				bld.setTitle(title);
+				bld.setMessage(message);
+				bld.setCancelable(false);
+				bld.setPositiveButton("Ok", null);
+				bld.show();
+			}
+		};
+		
+		handle.sendEmptyMessage(RESULT_OK);
 	}
 	
 	private void saveEvents()

@@ -14,9 +14,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.zip.GZIPOutputStream;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-
 import scheduler.events.Event;
 import scheduler.geneticAlgorithm.Individual;
 import scheduler.utils.DatabaseUtils;
