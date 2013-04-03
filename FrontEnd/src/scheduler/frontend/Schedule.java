@@ -1,6 +1,7 @@
 package scheduler.frontend;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class Schedule extends Activity {
 		
 		initGCM();
 		initButtons();
+		loadEvents();
 	}
 	
 	private void initButtons()
@@ -73,6 +75,7 @@ public class Schedule extends Activity {
 							{
 								ArrayList<Event> schedule = schedules.get(0);
 								events = schedule;
+								saveEvents();
 							}
 							
 							//Inform the callback that the operation is done
@@ -149,7 +152,7 @@ public class Schedule extends Activity {
 	private void saveEvents()
 	{
 		try {
-			File saveData = new File(getApplicationContext().getFilesDir(), "storedEvents");
+			File saveData = new File(getApplicationContext().getFilesDir(), FrontendConstants.EVENTS_FILE_NAME);
 			FileOutputStream outStream = new FileOutputStream(saveData);
 			
 			for(Event event : events)
@@ -167,6 +170,53 @@ public class Schedule extends Activity {
 		}
 	}
 
+	private void loadEvents()
+	{
+		try
+		{
+			File saveData = new File(getApplicationContext().getFilesDir(), FrontendConstants.EVENTS_FILE_NAME);
+			FileInputStream inStream = new FileInputStream(saveData);
+			
+			byte[] buffer = new byte[10000];
+			int read = inStream.read(buffer);
+			
+			ArrayList<Event> readEvents = new ArrayList<Event>();
+			for(int i = 0; i < read; i += Event.MAX_SIZE)
+			{
+				Event newEvent = Event.readFromBuffer(buffer, i, Event.MAX_SIZE);
+				readEvents.add(newEvent);
+			}
+			
+			events = readEvents;
+			
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					final TableLayout scroll = (TableLayout)findViewById(R.id.event_table);
+					
+					final Button refreshBtn = (Button)findViewById(R.id.btnAddEvent);
+					
+					//Clear the scrollView
+					refreshBtn.setEnabled(true);
+					scroll.removeAllViews();
+					for(Event event : events)
+					{
+						 //add the new events
+						EventItem newEvent = new EventItem(event.getName(), event.getLocation(), event.getStartTime(), scroll.getContext());
+						scroll.addView(newEvent);
+					}
+					
+				}
+			});
+			
+			inStream.close();
+		}catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	private void computeEvents()
 	{
 		class ComputeAsync extends AsyncTask<Integer, Integer, Integer>
