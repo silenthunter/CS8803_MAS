@@ -9,6 +9,7 @@ import java.util.Date;
 import scheduler.comms.MessageSender;
 import scheduler.events.Event;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings.Global;
 import android.app.Activity;
@@ -155,16 +156,16 @@ public class EventView extends FragmentActivity {
 		{
 			SimpleDateFormat dayFormat = new SimpleDateFormat("mm/dd/yy");
 			EditText txtDate = (EditText)findViewById(R.id.addEventDate);
-			String strDate = txtDate.toString();
+			String strDate = txtDate.getText().toString();
 			Date dayOf = dayFormat.parse(strDate);
 			
 			EditText txtStartTime = (EditText)findViewById(R.id.addEventStartDate);
-			SimpleDateFormat format = new SimpleDateFormat("HH:mmaa");
-			String strStartTime = txtStartTime.toString();
+			SimpleDateFormat format = new SimpleDateFormat("hh:mmaa");
+			String strStartTime = txtStartTime.getText().toString();
 			Date startTimeDate = format.parse(strStartTime);
 			
 			EditText txtEndTime = (EditText)findViewById(R.id.addEventEndDate);
-			String strEndTime = txtEndTime.toString();
+			String strEndTime = txtEndTime.getText().toString();
 			Date endTimeDate = format.parse(strEndTime);
 			
 			long startTime = dayOf.getTime() + startTimeDate.getTime();
@@ -185,15 +186,29 @@ public class EventView extends FragmentActivity {
 			//Events are locked
 			event.lock();
 			
-			//Write event to the server
-			MessageSender snd = new MessageSender(FrontendConstants.SERVER_ADDR, FrontendConstants.SERVER_PORT);
-			snd.connect();
-			ArrayList<Event> events = new ArrayList<Event>();
-			events.add(event);
-			snd.addEvents(events, FrontendConstants.USER_ID);
-			snd.disconnect();
+			class MessageAsync extends AsyncTask<Event, Integer, Long>
+			{
+				@Override
+				protected Long doInBackground(Event... params)
+				{
+					//Write event to the server
+					MessageSender snd = new MessageSender(FrontendConstants.SERVER_ADDR, FrontendConstants.SERVER_PORT);
+					snd.connect();
+					ArrayList<Event> events = new ArrayList<Event>();
+					for(Event ev : params)
+						events.add(ev);
+					snd.addEvents(events, FrontendConstants.USER_ID);
+					snd.disconnect();
+					
+					return null;
+				}
+			}
 			
-			//Return to old scren
+			//Call the server asynchronously
+			MessageAsync async = new MessageAsync();
+			async.execute(event);
+			
+			//Return to old screen
 			finish();
 			
 		}catch(Exception e)
@@ -205,7 +220,19 @@ public class EventView extends FragmentActivity {
 	public void onTimeSelected(int id, int hour, int minute)
 	{
 		EditText timeText = (EditText)findViewById(id);
-		timeText.setText(hour + ":" + minute);
+		
+		int convertedHour = hour % 12;
+		if(convertedHour == 0) convertedHour = 12;
+		
+		String ampm = hour / 12 == 0 ? "AM" : "PM";
+		
+		String strMin = Integer.toString(minute);
+		if(strMin.length() == 1) strMin = "0" + strMin; //Prepend a 0 if needed
+		
+		String convertedHourStr = Integer.toString(convertedHour);
+		if(convertedHourStr.length() == 1) convertedHourStr = "0" + convertedHourStr; //Prepend a 0 if needed
+		
+		timeText.setText(convertedHourStr + ":" + minute + ampm);
 	}
 	
 	public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener
