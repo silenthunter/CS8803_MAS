@@ -32,6 +32,7 @@ import android.widget.TableLayout;
 public class Schedule extends Activity {
 	
 	ArrayList<Event> events = new ArrayList<Event>();
+	Context scheduleContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,25 +124,26 @@ public class Schedule extends Activity {
 			FrontendConstants.GCM_Reg_ID = regID;
 		
 		GCMIntentService.setCallback(this);
+		
+		scheduleContext = this;
 	}
 	
 	public void spawnPopup(final String title, final String message)
 	{
-		final Context context = this;
-		Handler handle = new Handler()
-		{
+	
+		runOnUiThread(new Runnable() {
+			
 			@Override
-			public void handleMessage(Message msg) {
-				AlertDialog.Builder bld = new AlertDialog.Builder(context);
+			public void run() {
+				AlertDialog.Builder bld = new AlertDialog.Builder(scheduleContext);
 				bld.setTitle(title);
 				bld.setMessage(message);
 				bld.setCancelable(false);
 				bld.setPositiveButton("Ok", null);
 				bld.show();
+				
 			}
-		};
-		
-		handle.sendEmptyMessage(RESULT_OK);
+		});
 	}
 	
 	private void saveEvents()
