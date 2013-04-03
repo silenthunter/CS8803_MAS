@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.QuickContactBadge;
 
+import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
@@ -27,12 +28,28 @@ public class MainActivity extends Activity {
 	final static int AUTHORIZE = 8;
 	final static int GET_ALL_EVENTS = 9;
 	final static String SERVER_ADDR = "ec2-50-19-65-128.compute-1.amazonaws.com";
+	final static int USER_ID = 5;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		//Register this device with GCM
+	    String SENDER_ID = "616490724891";
+	    GCMRegistrar.checkDevice(this);
+	    GCMRegistrar.checkManifest(this);
+	    
+	    final String regId = GCMRegistrar.getRegistrationId(this);
+	    if(regId.equals(""))
+	    {
+	    	GCMRegistrar.register(this, SENDER_ID);
+	    }
+	    else
+	    {
+	    	System.out.println("Registered with ID: " + regId);
+	    }
 		
 		//startActivityForResult(new Intent(this,GoogleCalendarActivity.class),AUTHORIZE);
 		
@@ -66,7 +83,7 @@ public class MainActivity extends Activity {
 						}
 					}
 				}
-				sender.addEvents(events, 5);
+				sender.addEvents(events, USER_ID);
 				sender.disconnect();
 				return null;
 			}
@@ -132,7 +149,7 @@ public class MainActivity extends Activity {
 					
 				}
 				
-				new AysncComputeSchedule().execute(5);
+				new AysncComputeSchedule().execute(USER_ID);
 				
 			}
 		});

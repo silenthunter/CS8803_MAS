@@ -25,7 +25,7 @@ public class SchedulingServer
 		sqsURL = res.getQueueUrl();
 	}
 	
-	public static void writeToSQS(String message)
+	public static void writeToSQS(String message, String RetnID)
 	{
 		synchronized(sqsLock)
 		{

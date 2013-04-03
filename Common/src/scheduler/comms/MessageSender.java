@@ -197,10 +197,17 @@ public class MessageSender
 	/**
 	 * Request that the server computes a schedule from the user's events
 	 * @param userID The ID of the local user
+	 * @param regID The ID returned from the GCM upon registration
 	 */
-	public void createSchedule(int userID)
+	public void createSchedule(int userID, String regID)
 	{
-		Message msg = new Message(MessageType.CREATE_SCHEDULE, userID, new byte[]{});
+		byte[] stringArr = new byte[regID.length() * 2];
+		ByteBuffer buffer = ByteBuffer.wrap(stringArr);
+		buffer.putInt(regID.length());
+		for(int i = 0; i < regID.length(); i++)
+			buffer.putChar(regID.charAt(i));
+		
+		Message msg = new Message(MessageType.CREATE_SCHEDULE, userID, stringArr);
 		writeMessage(msg);
 	}
 	
