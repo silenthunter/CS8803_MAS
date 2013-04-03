@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import com.google.android.gcm.GCMRegistrar;
+
 import scheduler.comms.MessageSender;
 import scheduler.events.Event;
 
@@ -35,6 +37,7 @@ public class Schedule extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_schedule);
 		
+		initGCM();
 		initButtons();
 	}
 	
@@ -106,6 +109,18 @@ public class Schedule extends Activity {
 			}
 		});
 	}
+
+	private void initGCM()
+	{
+		GCMRegistrar.checkDevice(this);
+		GCMRegistrar.checkManifest(this);
+		
+		final String regID = GCMRegistrar.getRegistrationId(this);
+		if(regID.equals(""))
+			GCMRegistrar.register(this, FrontendConstants.SENDER_ID);
+		else
+			FrontendConstants.GCM_Reg_ID = regID;
+	}
 	
 	private void saveEvents()
 	{
@@ -128,6 +143,25 @@ public class Schedule extends Activity {
 		}
 	}
 
+	private void computeEvents()
+	{
+		class ComputeAsync extends AsyncTask<Integer, Integer, Integer>
+		{
+			@Override
+			protected Integer doInBackground(Integer... params)
+			{
+				MessageSender snd = new MessageSender(FrontendConstants.SERVER_ADDR, FrontendConstants.SERVER_PORT);
+				snd.connect();
+				snd.createSchedule(FrontendConstants.USER_ID, FrontendConstants.GCM_Reg_ID);
+				snd.disconnect();
+				return null;
+			}
+		}
+		
+		ComputeAsync async = new ComputeAsync();
+		async.execute();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -152,6 +186,10 @@ public class Schedule extends Activity {
 		{
 			Intent intent = new Intent(this, ItemView.class);
 			startActivity(intent);
+		}
+		else if(item.getItemId() == R.id.computeEvents)
+		{
+			computeEvents();
 		}
 		
 		// TODO Auto-generated method stub

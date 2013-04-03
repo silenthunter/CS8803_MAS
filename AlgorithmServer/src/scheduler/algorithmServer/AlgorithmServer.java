@@ -126,7 +126,13 @@ public class AlgorithmServer extends Thread
 					try
 					{
 						population = callback.get();
-						int uid = Integer.parseInt(futures.get(callback).getBody());
+						
+						String msgBody = futures.get(callback).getBody();
+						int idx = msgBody.indexOf('\n');
+						String userID = msgBody.substring(0, idx);
+						String regID = msgBody.substring(idx + 1);
+						
+						int uid = Integer.parseInt(userID);
 						
 						ConvertPopulationToSchedule(uid, population);
 						

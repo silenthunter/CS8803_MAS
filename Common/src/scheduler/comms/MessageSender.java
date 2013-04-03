@@ -201,7 +201,7 @@ public class MessageSender
 	 */
 	public void createSchedule(int userID, String regID)
 	{
-		byte[] stringArr = new byte[regID.length() * 2];
+		byte[] stringArr = new byte[4 + regID.length() * 2];
 		ByteBuffer buffer = ByteBuffer.wrap(stringArr);
 		buffer.putInt(regID.length());
 		for(int i = 0; i < regID.length(); i++)

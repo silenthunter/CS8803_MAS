@@ -1,4 +1,5 @@
-package scheduler.android;
+package scheduler.frontend;
+
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +23,9 @@ public class GCMIntentService extends GCMBaseIntentService
 	}
 
 	@Override
-	protected void onRegistered(Context arg0, String arg1) {
-		// TODO Auto-generated method stub
+	protected void onRegistered(Context arg0, String arg1)
+	{
+		FrontendConstants.GCM_Reg_ID = arg1;
 		
 	}
 

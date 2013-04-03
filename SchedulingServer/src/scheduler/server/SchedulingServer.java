@@ -29,7 +29,7 @@ public class SchedulingServer
 	{
 		synchronized(sqsLock)
 		{
-			SendMessageRequest msgReq = new SendMessageRequest(sqsURL, message);
+			SendMessageRequest msgReq = new SendMessageRequest(sqsURL, message + "\n" + RetnID);
 			sqsClient.sendMessage(msgReq);
 		}
 		
