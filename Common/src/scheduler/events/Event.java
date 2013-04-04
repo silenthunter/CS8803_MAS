@@ -10,7 +10,9 @@ public class Event implements Serializable
 	 */
 	private static final long serialVersionUID = -6573194170753336702L;
 
+	final static short LOW_PRIORITY = 1;
 	final static short DEFAULT_PRIORITY = 3;
+	final static short HIGH_PRIORITY = 9;
 	
 	private int UID;
 	private long startTime;
@@ -58,6 +60,11 @@ public class Event implements Serializable
 	public int getDuration()
 	{
 		return duration;
+	}
+	
+	public void setDuration(int duration)
+	{
+		this.duration = duration;
 	}
 	
 	public short getPriority()

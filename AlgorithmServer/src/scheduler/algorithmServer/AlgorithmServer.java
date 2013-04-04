@@ -92,7 +92,7 @@ public class AlgorithmServer extends Thread
 					gcmMap.put(uid, regID);
 					
 					//Create and submit the task
-					Callable<ArrayList<Individual>> thr = new GeneticAlgorithmThread(uid);
+					Callable<ArrayList<Individual>> thr = new PriorityAlgorithmThread(uid);
 					Future<ArrayList<Individual>> future = threadPool.submit(thr);
 					futures.put(future, msg);
 				}
