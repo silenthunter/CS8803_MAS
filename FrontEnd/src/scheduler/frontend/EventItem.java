@@ -3,8 +3,13 @@ package scheduler.frontend;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import scheduler.events.Event;
+
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
@@ -14,15 +19,36 @@ public class EventItem extends TableRow {
 
 	String eventName, eventLocation;
 	long eventTime;
+	Event event;
 	
-	public EventItem(String eventName, String eventLocation, long eventTime, Context context)
+	public EventItem(String eventName, String eventLocation, long eventTime, Event event, Context context)
 	{
 		super(context);
 		this.eventLocation = eventLocation;
 		this.eventName = eventName;
 		this.eventTime = eventTime;
+		this.event = event;
 		
 		onCreate(context);
+		initClickListener(event);
+	}
+	
+	private void initClickListener(final Event event)
+	{
+		final Context context = getContext();
+		
+		setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v)
+			{
+				Intent intent = new Intent(context, EventView.class);
+				Bundle args = new Bundle();
+				args.putSerializable("event", event);
+				intent.putExtras(args);
+				context.startActivity(intent);
+			}
+		});
 	}
 	
 	public void setName(String name)

@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="scheduler.frontend.Schedule"
-            android:label="Today" >
+            android:label="Scheduler" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

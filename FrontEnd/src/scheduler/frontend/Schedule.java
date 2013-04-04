@@ -102,7 +102,7 @@ public class Schedule extends Activity {
 						for(Event event : events)
 						{
 							 //add the new events
-							EventItem newEvent = new EventItem(event.getName(), event.getLocation(), event.getStartTime(), scroll.getContext());
+							EventItem newEvent = new EventItem(event.getName(), event.getLocation(), event.getStartTime(), event, scroll.getContext());
 							scroll.addView(newEvent);
 						}
 					}
@@ -130,7 +130,7 @@ public class Schedule extends Activity {
 		
 		scheduleContext = this;
 	}
-	
+
 	public void spawnPopup(final String title, final String message)
 	{
 	
@@ -177,7 +177,7 @@ public class Schedule extends Activity {
 			File saveData = new File(getApplicationContext().getFilesDir(), FrontendConstants.EVENTS_FILE_NAME);
 			FileInputStream inStream = new FileInputStream(saveData);
 			
-			byte[] buffer = new byte[10000];
+			byte[] buffer = new byte[1000000];
 			int read = inStream.read(buffer);
 			
 			ArrayList<Event> readEvents = new ArrayList<Event>();
@@ -203,7 +203,7 @@ public class Schedule extends Activity {
 					for(Event event : events)
 					{
 						 //add the new events
-						EventItem newEvent = new EventItem(event.getName(), event.getLocation(), event.getStartTime(), scroll.getContext());
+						EventItem newEvent = new EventItem(event.getName(), event.getLocation(), event.getStartTime(), event, scroll.getContext());
 						scroll.addView(newEvent);
 					}
 					

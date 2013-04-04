@@ -36,30 +36,76 @@ public class EventView extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.event_view);
 		
-		onInit();
+		boolean enabled = true;
+		
+		Bundle bundle = getIntent().getExtras();
+		if(bundle != null && bundle.containsKey("event"))
+		{
+			Event event = (Event)bundle.getSerializable("event");
+			initValues(event);
+			enabled = false;
+		}
+		
+		onInit(enabled);
 	}
 	
-	private void onInit()
+	private void initValues(Event event)
+	{
+		//Set title
+		EditText txtTitle = (EditText)findViewById(R.id.addTaskTitle);
+		txtTitle.setText(event.getName());
+		
+		//Set location
+		EditText txtLocation = (EditText)findViewById(R.id.addTaskLocation);
+		txtLocation.setText(event.getLocation());
+		
+		//Set date and time
+		long startTime = event.getStartTime();
+		long endTime = startTime + event.getDuration() * 60000;
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy");
+		SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mmaa");
+		
+		String dateStr = dateFormatter.format(new Date(startTime));
+		String startStr = timeFormatter.format(new Date(startTime));
+		String endStr = timeFormatter.format(new Date(endTime));
+		
+		EditText txtDate = (EditText)findViewById(R.id.addTaskDate);
+		txtDate.setText(dateStr);
+		
+		EditText txtStart = (EditText)findViewById(R.id.addTaskStartDate);
+		txtStart.setText(startStr);
+		
+		EditText txtEnd = (EditText)findViewById(R.id.addTaskEndDate);
+		txtEnd.setText(endStr);
+	}
+	
+	private void onInit(boolean enabled)
 	{
 		Button addEvent = (Button)findViewById(R.id.btnAddTask);
-		addEvent.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0)
-			{
-				//Check if it's valid data
-				if(checkValidation())
-				{
-					writeEvent();
-				}
+		if(!enabled)
+			addEvent.setVisibility(View.INVISIBLE);
+		else
+			addEvent.setOnClickListener(new View.OnClickListener() {
 				
-			}
-		});
+				@Override
+				public void onClick(View arg0)
+				{
+					//Check if it's valid data
+					if(checkValidation())
+					{
+						writeEvent();
+					}
+					
+				}
+			});
 		
 		final FragmentManager fragMan = getSupportFragmentManager();
 		
 		//Listen for the start time click
 		final EditText startTime = (EditText)findViewById(R.id.addTaskStartDate);
+		if(!enabled)
+			startTime.setEnabled(false);
+		else
 		startTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
@@ -80,6 +126,9 @@ public class EventView extends FragmentActivity {
 
 		//Listen for the end time click
 		final EditText endTime = (EditText)findViewById(R.id.addTaskEndDate);
+		if(!enabled)
+			endTime.setEnabled(false);
+		else
 		endTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
@@ -96,6 +145,18 @@ public class EventView extends FragmentActivity {
 				
 			}
 		});
+		
+		if(!enabled)
+		{
+			EditText dateTxt = (EditText)findViewById(R.id.addTaskDate);
+			dateTxt.setEnabled(false);
+			
+			EditText txtLocation = (EditText)findViewById(R.id.addTaskLocation);
+			txtLocation.setEnabled(false);
+			
+			EditText txtTitle = (EditText)findViewById(R.id.addTaskTitle);
+			txtTitle.setEnabled(false);
+		}
 	}
 	
 	private boolean checkValidation()
@@ -195,8 +256,13 @@ public class EventView extends FragmentActivity {
 					MessageSender snd = new MessageSender(FrontendConstants.SERVER_ADDR, FrontendConstants.SERVER_PORT);
 					snd.connect();
 					ArrayList<Event> events = new ArrayList<Event>();
+					
+					boolean modify = true;
 					for(Event ev : params)
+					{
 						events.add(ev);
+						if(ev.getUID() == 0) modify = false;
+					}
 					snd.addEvents(events, FrontendConstants.USER_ID);
 					snd.disconnect();
 					
