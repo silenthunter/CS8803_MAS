@@ -10,9 +10,9 @@ public class Event implements Serializable
 	 */
 	private static final long serialVersionUID = -6573194170753336702L;
 
-	final static short LOW_PRIORITY = 1;
-	final static short DEFAULT_PRIORITY = 3;
-	final static short HIGH_PRIORITY = 9;
+	final public static short LOW_PRIORITY = 1;
+	final public static short DEFAULT_PRIORITY = 3;
+	final public static short HIGH_PRIORITY = 9;
 	
 	private int UID;
 	private long startTime;

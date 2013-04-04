@@ -173,7 +173,7 @@ public class EventView extends FragmentActivity {
 			//Get the difference in minutes
 			short duration = (short)((endTimeDate.getTime() - startTimeDate.getTime()) / 60000);
 			
-			Event event = new Event(startTime, duration);
+			Event event = new Event(startTime, duration, Event.DEFAULT_PRIORITY);
 			
 			//Set name
 			EditText txtName = (EditText)findViewById(R.id.addEventTitle);
