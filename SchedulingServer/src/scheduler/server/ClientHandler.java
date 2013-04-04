@@ -104,7 +104,7 @@ public class ClientHandler extends Thread
 			for(Event event : events)
 			{
 				int eventID = DatabaseUtils.addEvent(event);
-				DatabaseUtils.addUserToEvent(msg.getUserID(), eventID, 0);
+				DatabaseUtils.addUserToEvent(msg.getUserID(), eventID, event.getPriority());
 			}
 		}
 		else if(msg.getType() == MessageType.CREATE_SCHEDULE)

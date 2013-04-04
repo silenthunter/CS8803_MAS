@@ -41,7 +41,7 @@ public class EventView extends FragmentActivity {
 	
 	private void onInit()
 	{
-		Button addEvent = (Button)findViewById(R.id.btnAddEvent);
+		Button addEvent = (Button)findViewById(R.id.btnAddTask);
 		addEvent.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -59,7 +59,7 @@ public class EventView extends FragmentActivity {
 		final FragmentManager fragMan = getSupportFragmentManager();
 		
 		//Listen for the start time click
-		final EditText startTime = (EditText)findViewById(R.id.addEventStartDate);
+		final EditText startTime = (EditText)findViewById(R.id.addTaskStartDate);
 		startTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
@@ -79,7 +79,7 @@ public class EventView extends FragmentActivity {
 		
 
 		//Listen for the end time click
-		final EditText endTime = (EditText)findViewById(R.id.addEventEndDate);
+		final EditText endTime = (EditText)findViewById(R.id.addTaskEndDate);
 		endTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			
 			@Override
@@ -101,17 +101,17 @@ public class EventView extends FragmentActivity {
 	private boolean checkValidation()
 	{
 		//Check date
-		TextView txtDate = (TextView)findViewById(R.id.addEventDate);
+		TextView txtDate = (TextView)findViewById(R.id.addTaskDate);
 		String dateStr = txtDate.getText().toString();
 		if(!checkDateTime(dateStr, "mm/dd/yy", "Invalid date format")) return false;
 		
 		//Check start time
-		TextView txtStartDate = (TextView)findViewById(R.id.addEventStartDate);
+		TextView txtStartDate = (TextView)findViewById(R.id.addTaskStartDate);
 		String startDateStr = txtStartDate.getText().toString();
 		if(!checkDateTime(startDateStr, "HH:mmaa", "Invalid start time")) return false;
 		
 		//Check end time
-		TextView txtEndDate = (TextView)findViewById(R.id.addEventEndDate);
+		TextView txtEndDate = (TextView)findViewById(R.id.addTaskEndDate);
 		String endDateStr = txtEndDate.getText().toString();
 		if(!checkDateTime(endDateStr, "HH:mmaa", "Invalid end time")) return false;
 		
@@ -155,16 +155,16 @@ public class EventView extends FragmentActivity {
 		try
 		{
 			SimpleDateFormat dayFormat = new SimpleDateFormat("mm/dd/yy");
-			EditText txtDate = (EditText)findViewById(R.id.addEventDate);
+			EditText txtDate = (EditText)findViewById(R.id.addTaskDate);
 			String strDate = txtDate.getText().toString();
 			Date dayOf = dayFormat.parse(strDate);
 			
-			EditText txtStartTime = (EditText)findViewById(R.id.addEventStartDate);
+			EditText txtStartTime = (EditText)findViewById(R.id.addTaskStartDate);
 			SimpleDateFormat format = new SimpleDateFormat("hh:mmaa");
 			String strStartTime = txtStartTime.getText().toString();
 			Date startTimeDate = format.parse(strStartTime);
 			
-			EditText txtEndTime = (EditText)findViewById(R.id.addEventEndDate);
+			EditText txtEndTime = (EditText)findViewById(R.id.addTaskEndDate);
 			String strEndTime = txtEndTime.getText().toString();
 			Date endTimeDate = format.parse(strEndTime);
 			
@@ -176,11 +176,11 @@ public class EventView extends FragmentActivity {
 			Event event = new Event(startTime, duration, Event.DEFAULT_PRIORITY);
 			
 			//Set name
-			EditText txtName = (EditText)findViewById(R.id.addEventTitle);
+			EditText txtName = (EditText)findViewById(R.id.addTaskTitle);
 			event.setName(txtName.getText().toString());
 			
 			//Set location
-			EditText txtLocation = (EditText)findViewById(R.id.addEventLocation);
+			EditText txtLocation = (EditText)findViewById(R.id.addTaskLocation);
 			event.setLocation(txtLocation.getText().toString());
 			
 			//Events are locked
