@@ -45,11 +45,13 @@ public class DatabaseUtils
 		
 		try
 		{
+			short locked = (short)(event.isLocked() ? 1 : 0);
+			
 			stmt = conn.createStatement();
-			stmt.executeUpdate("INSERT INTO Events (StartTime, Duration, Name, Location) " +
+			stmt.executeUpdate("INSERT INTO Events (StartTime, Duration, Name, Location, Locked) " +
 					"VALUES ('" + event.getStartTime() + "', " +
 							"'" + event.getDuration() + "', '" +
-							event.getName() + "', '" + event.getLocation() + "')", Statement.RETURN_GENERATED_KEYS);
+							event.getName() + "', '" + event.getLocation() + "', '" + locked + "')", Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			if(rs != null && rs.next())
 				UID = rs.getInt(1);
@@ -220,7 +222,7 @@ public class DatabaseUtils
 		try
 		{
 			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT ev.UID, ev.Name, ev.Location, ev.StartTime, ev.Duration, intr.Priority FROM Inter intr, Events ev, Users usr WHERE " +
+			ResultSet rs = stmt.executeQuery("SELECT ev.UID, ev.Name, ev.Location, ev.StartTime, ev.Duration, intr.Priority, ev.Locked FROM Inter intr, Events ev, Users usr WHERE " +
 					"intr.EventUID = ev.UID AND " +
 					"intr.UserUID = usr.UID AND " +
 					"usr.UID = " +userUID);
@@ -235,11 +237,15 @@ public class DatabaseUtils
 				long startTime = rs.getLong(4);
 				int duration = rs.getInt(5);
 				short priority = rs.getShort(6);
+				boolean locked = rs.getBoolean(7);
 				
 				Event ev = new Event(startTime, duration, priority);
 				ev.setName(name);
 				ev.setLocation(location);
 				ev.setUID(UID);
+				
+				if(locked) ev.lock();
+				else ev.unlock();
 				
 				retn.add(ev);
 			}

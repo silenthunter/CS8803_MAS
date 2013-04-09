@@ -235,7 +235,7 @@ public class ItemView extends FragmentActivity {
 		String convertedHourStr = Integer.toString(convertedHour);
 		if(convertedHourStr.length() == 1) convertedHourStr = "0" + convertedHourStr; //Prepend a 0 if needed
 		
-		timeText.setText(convertedHourStr + ":" + minute + ampm);
+		timeText.setText(convertedHourStr + ":" + strMin + ampm);
 	}
 	
 	@Override

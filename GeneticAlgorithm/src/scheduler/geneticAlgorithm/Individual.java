@@ -139,6 +139,8 @@ public class Individual
 		ArrayList<Event> sorted = ArrayListUtils.copyList(events);
 		Collections.sort(sorted, new EventComparer());
 		
+		Date now = new Date();
+		
 		for(int i = 1; i < sorted.size(); i++)
 		{
 			long startTime1 = sorted.get(i - 1).getStartTime();
@@ -150,6 +152,13 @@ public class Individual
 			
 			//Penalty for time between events. (Waiting is boring)
 			fitness -= (startTime2 - endTime1) / 60;
+			
+			//Penalty for time from now
+			fitness -= Math.min((startTime1 - now.getTime() / 1000), 0);
+			
+			//Large loss for time before now
+			if(startTime1 < now.getTime())
+				fitness -= 10000;
 		}
 	}
 	

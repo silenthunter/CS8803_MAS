@@ -60,7 +60,7 @@ public class EventView extends FragmentActivity {
 		txtLocation.setText(event.getLocation());
 		
 		//Set date and time
-		long startTime = event.getStartTime();
+		long startTime = event.getStartTime() * 1000;
 		long endTime = startTime + event.getDuration() * 60000;
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yy");
 		SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mmaa");
@@ -169,12 +169,12 @@ public class EventView extends FragmentActivity {
 		//Check start time
 		TextView txtStartDate = (TextView)findViewById(R.id.addTaskStartDate);
 		String startDateStr = txtStartDate.getText().toString();
-		if(!checkDateTime(startDateStr, "HH:mmaa", "Invalid start time")) return false;
+		if(!checkDateTime(startDateStr, "hh:mmaa", "Invalid start time")) return false;
 		
 		//Check end time
 		TextView txtEndDate = (TextView)findViewById(R.id.addTaskEndDate);
 		String endDateStr = txtEndDate.getText().toString();
-		if(!checkDateTime(endDateStr, "HH:mmaa", "Invalid end time")) return false;
+		if(!checkDateTime(endDateStr, "hh:mmaa", "Invalid end time")) return false;
 		
 		return true;
 	}
@@ -234,7 +234,7 @@ public class EventView extends FragmentActivity {
 			//Get the difference in minutes
 			short duration = (short)((endTimeDate.getTime() - startTimeDate.getTime()) / 60000);
 			
-			Event event = new Event(startTime, duration, Event.DEFAULT_PRIORITY);
+			Event event = new Event(startTime / 1000, duration, Event.DEFAULT_PRIORITY);
 			
 			//Set name
 			EditText txtName = (EditText)findViewById(R.id.addTaskTitle);
@@ -298,7 +298,7 @@ public class EventView extends FragmentActivity {
 		String convertedHourStr = Integer.toString(convertedHour);
 		if(convertedHourStr.length() == 1) convertedHourStr = "0" + convertedHourStr; //Prepend a 0 if needed
 		
-		timeText.setText(convertedHourStr + ":" + minute + ampm);
+		timeText.setText(convertedHourStr + ":" + strMin + ampm);
 	}
 	
 	public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener

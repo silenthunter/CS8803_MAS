@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -16,6 +17,8 @@ import java.util.zip.GZIPOutputStream;
 
 import scheduler.events.Event;
 import scheduler.geneticAlgorithm.Individual;
+import scheduler.geneticAlgorithm.IndividualComparer;
+import scheduler.utils.ArrayListUtils;
 import scheduler.utils.DatabaseUtils;
 
 import com.amazonaws.auth.AWSCredentials;
@@ -92,7 +95,7 @@ public class AlgorithmServer extends Thread
 					gcmMap.put(uid, regID);
 					
 					//Create and submit the task
-					Callable<ArrayList<Individual>> thr = new PriorityAlgorithmThread(uid);
+					Callable<ArrayList<Individual>> thr = new GeneticAlgorithmThread(uid);
 					Future<ArrayList<Individual>> future = threadPool.submit(thr);
 					futures.put(future, msg);
 				}
@@ -161,10 +164,11 @@ public class AlgorithmServer extends Thread
 	{
 		synchronized(writeQueue)
 		{
+			Collections.sort(population, new IndividualComparer());
 			ArrayList<Event> events = population.get(0).getEvents();
 			for(Event ev : events)
 			{
-				Date d = new Date(ev.getStartTime());
+				Date d = new Date(ev.getStartTime() * 1000);
 				System.out.println("CPS: " + d.toString());
 			}
 			

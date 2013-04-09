@@ -151,9 +151,12 @@ public class Event implements Serializable
 		long startTimeTmp = byteBuffer.getLong();
 		int durationTmp = byteBuffer.getInt();
 		short priorityTmp = byteBuffer.getShort();
+		byte lockedTmp = byteBuffer.get();
 		
 		Event retn = new Event(startTimeTmp, durationTmp, priorityTmp);
 		retn.UID = uid;
+		if(lockedTmp > 0) retn.locked = true;
+		else retn.locked = false;
 		
 		//Read the Name
 		short strLen = byteBuffer.getShort();
@@ -186,6 +189,7 @@ public class Event implements Serializable
 		byteBuffer.putLong(event.startTime);
 		byteBuffer.putInt(event.duration);
 		byteBuffer.putShort(event.priority);
+		byteBuffer.put((byte) (event.locked ? 1 : 0));
 		
 		//Write Name
 		byteBuffer.putShort((short)event.name.length());

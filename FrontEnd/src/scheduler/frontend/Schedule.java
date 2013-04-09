@@ -102,7 +102,7 @@ public class Schedule extends Activity {
 						for(Event event : events)
 						{
 							 //add the new events
-							EventItem newEvent = new EventItem(event.getName(), event.getLocation(), event.getStartTime(), event, scroll.getContext());
+							EventItem newEvent = new EventItem(event.getName(), event.getLocation(), event.getStartTime() * 1000, event, scroll.getContext());
 							scroll.addView(newEvent);
 						}
 					}
@@ -203,7 +203,7 @@ public class Schedule extends Activity {
 					for(Event event : events)
 					{
 						 //add the new events
-						EventItem newEvent = new EventItem(event.getName(), event.getLocation(), event.getStartTime(), event, scroll.getContext());
+						EventItem newEvent = new EventItem(event.getName(), event.getLocation(), event.getStartTime() * 1000, event, scroll.getContext());
 						scroll.addView(newEvent);
 					}
 					
