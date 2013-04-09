@@ -25,6 +25,10 @@ public class ClientHandler extends Thread
 {
 	private Socket clientConn;
 	
+	/**
+	 * Instantiates a ClientHandler using a provided socket
+	 * @param clientConn The socket established by a connecting user
+	 */
 	public ClientHandler(Socket clientConn)
 	{
 		this.clientConn = clientConn;
@@ -91,6 +95,10 @@ public class ClientHandler extends Thread
 		}
 	}
 	
+	/**
+	 * Creates a message from a byte buffer, and sends the information to the correct place
+	 * @param buff An array of bytes that can be converted to a Message object
+	 */
 	private void processMessage(byte buff[])
 	{
 		Message msg = Message.readFromBuffer(buff);
@@ -147,6 +155,11 @@ public class ClientHandler extends Thread
 		}
 	}
 	
+	/**
+	 * Takes the binary data from a Message and converts it to Events
+	 * @param msg The message to read
+	 * @return An ArrayList of Events
+	 */
 	private ArrayList<Event> getEventsFromMessage(Message msg)
 	{
 		ArrayList<Event> events = new ArrayList<Event>();

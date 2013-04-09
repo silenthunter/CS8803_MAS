@@ -2,6 +2,7 @@ package scheduler.geneticAlgorithm;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Random;
 
 import scheduler.events.Event;
@@ -95,6 +96,9 @@ public class GeneticAlgorithm
 	 */
 	public ArrayList<Individual> getPopulation()
 	{
+		System.out.println("-TEST-");
+		population.get(0).printSchedule();
+		
 		return population;
 	}
 }

@@ -211,6 +211,9 @@ public class EventView extends FragmentActivity {
 		return true;
 	}
 	
+	/**
+	 * Writes an event to the server based on data in the fields
+	 */
 	private void writeEvent()
 	{
 		try
